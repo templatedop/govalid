@@ -75,7 +75,7 @@ func (o *oneofValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not one of the allowed values.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be one of [@VALUES]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be one of [@VALUES]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sOneofValidation", o.structName, o.FieldName())

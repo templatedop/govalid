@@ -17,5 +17,5 @@ func (e Excluded_ifInitializer) Marker() string {
 
 // Init initializes the excluded_if validator factory.
 func (e Excluded_ifInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateExcluded_if
+	return rules.ValidateExcludedIf
 }

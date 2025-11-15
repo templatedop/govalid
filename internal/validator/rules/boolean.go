@@ -57,7 +57,7 @@ func (b *booleanValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid boolean string.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be a valid boolean (true, false, 1, 0, yes, no, on, off)",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid boolean (true, false, 1, 0, yes, no, on, off)", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sBooleanValidation", b.structName, b.FieldName())

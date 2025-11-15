@@ -66,7 +66,7 @@ func (u *uniqueValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains duplicate values.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must contain unique values",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain unique values", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sUniqueValidation", u.structName, u.FieldName())

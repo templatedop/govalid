@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -64,11 +63,14 @@ func (e *excluded_ifValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field must be absent due to another field's value.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be absent when [@OTHER] equals [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be absent when [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludedIfValidation", e.structName, e.FieldName())
 	currentErrVarName := e.ErrVariable()
+
+	// Escape quotes in the value for error message
+	escapedValue := strings.ReplaceAll(e.expectedValue, `"`, `\"`)
 
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
@@ -76,7 +78,7 @@ func (e *excluded_ifValidator) Err() string {
 		"[@FIELD]", e.FieldName(),
 		"[@PATH]", e.FieldPath().String(),
 		"[@OTHER]", e.otherField,
-		"[@VALUE]", e.expectedValue,
+		"[@VALUE]", escapedValue,
 		"[@TYPE]", e.ruleName,
 	)
 
@@ -98,7 +100,7 @@ func (e *excluded_ifValidator) Imports() []string {
 // ValidateExcludedIf creates a new excluded_ifValidator.
 // Format: excluded_if=OtherField Value
 func ValidateExcludedIf(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerExcludedIf]
+	expr, ok := input.Expressions[markers.GoValidMarkerExcluded_if]
 	if !ok {
 		return nil
 	}

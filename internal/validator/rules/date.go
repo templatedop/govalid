@@ -47,7 +47,7 @@ func (d *dateValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid date (dd/mm/yy).
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be a valid date (dd/mm/yy)",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid date (dd/mm/yy)", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", d.ErrVariable(),

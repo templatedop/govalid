@@ -56,7 +56,7 @@ func (v *fqdnValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a fully qualified domain name.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be a fully qualified domain name",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a fully qualified domain name", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sFQDNValidation", v.structName, v.FieldName())

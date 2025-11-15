@@ -17,5 +17,5 @@ func (e Excluded_with_allInitializer) Marker() string {
 
 // Init initializes the excluded_with_all validator factory.
 func (e Excluded_with_allInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateExcluded_with_all
+	return rules.ValidateExcludedWithAll
 }

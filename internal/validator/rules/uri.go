@@ -56,7 +56,7 @@ func (v *uriValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a URI.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be a URI",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a URI", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sURIValidation", v.structName, v.FieldName())

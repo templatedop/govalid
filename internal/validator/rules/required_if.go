@@ -64,11 +64,14 @@ func (r *required_ifValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required due to another field's value.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] is required when [@OTHER] equals [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required when [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredIfValidation", r.structName, r.FieldName())
 	currentErrVarName := r.ErrVariable()
+
+	// Escape quotes in the value for error message
+	escapedValue := strings.ReplaceAll(r.expectedValue, `"`, `\"`)
 
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
@@ -76,7 +79,7 @@ func (r *required_ifValidator) Err() string {
 		"[@FIELD]", r.FieldName(),
 		"[@PATH]", r.FieldPath().String(),
 		"[@OTHER]", r.otherField,
-		"[@VALUE]", r.expectedValue,
+		"[@VALUE]", escapedValue,
 		"[@TYPE]", r.ruleName,
 	)
 
@@ -98,7 +101,7 @@ func (r *required_ifValidator) Imports() []string {
 // ValidateRequiredIf creates a new required_ifValidator.
 // Format: required_if=OtherField Value
 func ValidateRequiredIf(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerRequiredIf]
+	expr, ok := input.Expressions[markers.GoValidMarkerRequired_if]
 	if !ok {
 		return nil
 	}

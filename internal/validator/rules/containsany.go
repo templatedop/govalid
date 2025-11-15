@@ -58,7 +58,7 @@ func (c *containsanyValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field does not contain any of the specified characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must contain at least one of these characters: [@CHARS]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain at least one of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sContainsanyValidation", c.structName, c.FieldName())

@@ -17,5 +17,5 @@ func (u UriInitializer) Marker() string {
 
 // Init initializes the uri validator factory.
 func (u UriInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateUri
+	return rules.ValidateURI
 }

@@ -28,7 +28,7 @@ const maxdurationKey = "%s-maxduration"
 
 func (m *maxdurationValidator) Validate() string {
 	fieldName := m.FieldName()
-	return fmt.Sprintf("t.%s > time.Duration(%s)", fieldName, m.maxDuration)
+	return fmt.Sprintf("func() bool { d, _ := time.ParseDuration(%q); return t.%s > d }()", m.maxDuration, fieldName)
 }
 
 func (m *maxdurationValidator) FieldName() string {
@@ -57,7 +57,7 @@ func (m *maxdurationValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the duration exceeds the maximum.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must not exceed [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not exceed [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMaxdurationValidation", m.structName, m.FieldName())

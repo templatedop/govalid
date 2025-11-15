@@ -56,7 +56,7 @@ func (a *alphanumValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains non-alphanumeric characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must contain only alphanumeric characters",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain only alphanumeric characters", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sAlphanumValidation", a.structName, a.FieldName())

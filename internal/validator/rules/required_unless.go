@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -64,11 +63,14 @@ func (r *required_unlessValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required unless another field has a specific value.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] is required unless [@OTHER] equals [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required unless [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredUnlessValidation", r.structName, r.FieldName())
 	currentErrVarName := r.ErrVariable()
+
+	// Escape quotes in the value for error message
+	escapedValue := strings.ReplaceAll(r.expectedValue, `"`, `\"`)
 
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
@@ -76,7 +78,7 @@ func (r *required_unlessValidator) Err() string {
 		"[@FIELD]", r.FieldName(),
 		"[@PATH]", r.FieldPath().String(),
 		"[@OTHER]", r.otherField,
-		"[@VALUE]", r.expectedValue,
+		"[@VALUE]", escapedValue,
 		"[@TYPE]", r.ruleName,
 	)
 
@@ -98,7 +100,7 @@ func (r *required_unlessValidator) Imports() []string {
 // ValidateRequiredUnless creates a new required_unlessValidator.
 // Format: required_unless=OtherField Value
 func ValidateRequiredUnless(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerRequiredUnless]
+	expr, ok := input.Expressions[markers.GoValidMarkerRequired_unless]
 	if !ok {
 		return nil
 	}

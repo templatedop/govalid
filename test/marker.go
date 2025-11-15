@@ -1,6 +1,7 @@
 //go:generate govalid ./marker.go
 
 package test
+import "time"
 
 type Required struct {
 	// +govalid:required
@@ -167,4 +168,219 @@ type IPV4 struct {
 type IPV6 struct {
 	// +govalid:ipv6
 	IP string `validate:"ipv6" json:"ip"`
+}
+
+// New validators - Simple validators
+
+type Min struct {
+	// +govalid:min=10
+	Age int `validate:"min=10" json:"age"`
+}
+
+type Eq struct {
+	// +govalid:eq=active
+	Status string `validate:"eq=active" json:"status"`
+
+	// +govalid:eq=100
+	Count int `validate:"eq=100" json:"count"`
+}
+
+type Ne struct {
+	// +govalid:ne=admin
+	Role string `validate:"ne=admin" json:"role"`
+
+	// +govalid:ne=0
+	Score int `validate:"ne=0" json:"score"`
+}
+
+type IsDefault struct {
+	// +govalid:isdefault
+	OptionalField string `validate:"isdefault" json:"optional_field"`
+
+	// +govalid:isdefault
+	OptionalNumber int `validate:"isdefault" json:"optional_number"`
+}
+
+type Boolean struct {
+	// +govalid:boolean
+	Flag string `validate:"boolean" json:"flag"`
+}
+
+type Lowercase struct {
+	// +govalid:lowercase
+	Username string `validate:"lowercase" json:"username"`
+}
+
+type OneOf struct {
+	// +govalid:oneof=red green blue
+	Color string `validate:"oneof=red green blue" json:"color"`
+
+	// +govalid:oneof=1 2 3
+	Level int `validate:"oneof=1 2 3" json:"level"`
+}
+
+type Number struct {
+	// +govalid:number
+	NumericString string `validate:"number" json:"numeric_string"`
+}
+
+type Alphanum struct {
+	// +govalid:alphanum
+	Code string `validate:"alphanum" json:"code"`
+}
+
+// String pattern validators
+
+type ContainsAny struct {
+	// +govalid:containsany=!@#$
+	Password string `validate:"containsany=!@#$" json:"password"`
+}
+
+type Excludes struct {
+	// +govalid:excludes=admin
+	Username string `validate:"excludes=admin" json:"username"`
+}
+
+type ExcludesAll struct {
+	// +govalid:excludesall=<>
+	Comment string `validate:"excludesall=<>" json:"comment"`
+}
+
+type Unique struct {
+	// +govalid:unique
+	Tags []string `validate:"unique" json:"tags"`
+
+	// +govalid:unique
+	IDs []int `validate:"unique" json:"ids"`
+}
+
+// Format validators
+
+type URI struct {
+	// +govalid:uri
+	Address string `validate:"uri" json:"address"`
+}
+
+type FQDN struct {
+	// +govalid:fqdn
+	Domain string `validate:"fqdn" json:"domain"`
+}
+
+type Latitude struct {
+	// +govalid:latitude
+	Lat string `validate:"latitude" json:"lat"`
+}
+
+type Longitude struct {
+	// +govalid:longitude
+	Lon string `validate:"longitude" json:"lon"`
+}
+
+type IsColour struct {
+	// +govalid:iscolour
+	Color string `validate:"iscolor" json:"color"`
+}
+
+// Duration validators
+
+type MinDuration struct {
+	// +govalid:minduration=1h
+	Timeout time.Duration ` json:"timeout"`
+}
+
+type MaxDuration struct {
+	// +govalid:maxduration=24h
+	Interval time.Duration ` json:"interval"`
+}
+
+// Conditional required validators
+
+type RequiredIf struct {
+	Status string
+
+	// +govalid:required_if=Status active
+	ActiveField string `validate:"required_if=Status active" json:"active_field"`
+}
+
+type RequiredUnless struct {
+	Status string
+
+	// +govalid:required_unless=Status inactive
+	ActiveField string `validate:"required_unless=Status inactive" json:"active_field"`
+}
+
+type RequiredWith struct {
+	Email string
+
+	// +govalid:required_with=Email
+	EmailConfirmation string `validate:"required_with=Email" json:"email_confirmation"`
+}
+
+type RequiredWithAll struct {
+	FirstName string
+	LastName  string
+
+	// +govalid:required_with_all=FirstName LastName
+	FullName string `validate:"required_with_all=FirstName LastName" json:"full_name"`
+}
+
+type RequiredWithout struct {
+	Phone string
+
+	// +govalid:required_without=Phone
+	Email string `validate:"required_without=Phone" json:"email"`
+}
+
+type RequiredWithoutAll struct {
+	Phone string
+	Fax   string
+
+	// +govalid:required_without_all=Phone Fax
+	Email string `validate:"required_without_all=Phone Fax" json:"email"`
+}
+
+// Conditional excluded validators
+
+type ExcludedIf struct {
+	Status string
+
+	// +govalid:excluded_if=Status inactive
+	InactiveField string `validate:"excluded_if=Status inactive" json:"inactive_field"`
+}
+
+type ExcludedUnless struct {
+	Status string
+
+	// +govalid:excluded_unless=Status active
+	InactiveField string `validate:"excluded_unless=Status active" json:"inactive_field"`
+}
+
+type ExcludedWith struct {
+	GuestMode bool
+
+	// +govalid:excluded_with=GuestMode
+	AdminPanel string `validate:"excluded_with=GuestMode" json:"admin_panel"`
+}
+
+type ExcludedWithAll struct {
+	ReadOnly  bool
+	Archived  bool
+
+	// +govalid:excluded_with_all=ReadOnly Archived
+	EditButton string `validate:"excluded_with_all=ReadOnly Archived" json:"edit_button"`
+}
+
+type ExcludedWithout struct {
+	Premium bool
+
+	// +govalid:excluded_without=Premium
+	FreeFeature string `validate:"excluded_without=Premium" json:"free_feature"`
+}
+
+type ExcludedWithoutAll struct {
+	FeatureA bool
+	FeatureB bool
+
+	// +govalid:excluded_without_all=FeatureA FeatureB
+	ConflictingFeature string `validate:"excluded_without_all=FeatureA FeatureB" json:"conflicting_feature"`
 }

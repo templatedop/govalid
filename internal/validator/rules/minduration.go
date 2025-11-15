@@ -28,7 +28,7 @@ const mindurationKey = "%s-minduration"
 
 func (m *mindurationValidator) Validate() string {
 	fieldName := m.FieldName()
-	return fmt.Sprintf("t.%s < time.Duration(%s)", fieldName, m.minDuration)
+	return fmt.Sprintf("func() bool { d, _ := time.ParseDuration(%q); return t.%s < d }()", m.minDuration, fieldName)
 }
 
 func (m *mindurationValidator) FieldName() string {
@@ -57,7 +57,7 @@ func (m *mindurationValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the duration is less than the minimum.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be at least [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be at least [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMindurationValidation", m.structName, m.FieldName())

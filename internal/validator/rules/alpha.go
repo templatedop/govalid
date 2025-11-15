@@ -55,7 +55,7 @@ func (v *alphaValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when field [@FIELD] is not alphabetic.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be alphabetic",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be alphabetic", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sAlphaValidation", v.structName, v.FieldName())

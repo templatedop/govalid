@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -69,7 +68,7 @@ func (r *required_withValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required because other fields are present.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] is required when any of [@FIELDS] are present",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required when any of [@FIELDS] are present", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredWithValidation", r.structName, r.FieldName())
@@ -102,7 +101,7 @@ func (r *required_withValidator) Imports() []string {
 // ValidateRequiredWith creates a new required_withValidator.
 // Format: required_with=Field1 Field2 Field3...
 func ValidateRequiredWith(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerRequiredWith]
+	expr, ok := input.Expressions[markers.GoValidMarkerRequired_with]
 	if !ok {
 		return nil
 	}

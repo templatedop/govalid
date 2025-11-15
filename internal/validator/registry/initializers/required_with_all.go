@@ -17,5 +17,5 @@ func (r Required_with_allInitializer) Marker() string {
 
 // Init initializes the required_with_all validator factory.
 func (r Required_with_allInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateRequired_with_all
+	return rules.ValidateRequiredWithAll
 }

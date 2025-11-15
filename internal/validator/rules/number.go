@@ -56,7 +56,7 @@ func (n *numberValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains non-numeric characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must contain only numbers",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain only numbers", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sNumberValidation", n.structName, n.FieldName())

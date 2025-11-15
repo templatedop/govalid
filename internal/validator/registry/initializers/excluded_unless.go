@@ -17,5 +17,5 @@ func (e Excluded_unlessInitializer) Marker() string {
 
 // Init initializes the excluded_unless validator factory.
 func (e Excluded_unlessInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateExcluded_unless
+	return rules.ValidateExcludedUnless
 }
