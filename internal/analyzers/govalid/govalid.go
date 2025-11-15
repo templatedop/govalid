@@ -122,6 +122,9 @@ func (g *generator) run(pass *codegen.Pass) error {
 				return
 			}
 
+			// Consolidate validators with the same ParentVariable into single loops for performance
+			metadata = consolidateMetadata(metadata)
+
 			tmplData := TemplateData{
 				PackageName:    pass.Pkg.Name(),
 				TypeName:       ts.Name.Name,
@@ -147,6 +150,55 @@ func (g *generator) run(pass *codegen.Pass) error {
 type AnalyzedMetadata struct {
 	Validators     []validator.Validator
 	ParentVariable string
+}
+
+// consolidateMetadata merges AnalyzedMetadata entries with the same ParentVariable
+// to generate a single loop instead of multiple loops for better performance.
+// This is especially important for dive directives on collections.
+// Only consolidates indexed parents (containing '[i]') to avoid changing behavior
+// for non-collection nested structs.
+func consolidateMetadata(metadata []*AnalyzedMetadata) []*AnalyzedMetadata {
+	if len(metadata) == 0 {
+		return metadata
+	}
+
+	// Map to collect validators by ParentVariable (only for indexed parents)
+	parentMap := make(map[string]*AnalyzedMetadata)
+	var order []string // Track insertion order
+	result := make([]*AnalyzedMetadata, 0, len(metadata))
+
+	for _, meta := range metadata {
+		key := meta.ParentVariable
+
+		// Only consolidate indexed parents (dive on collections)
+		// Non-indexed parents should keep their original structure
+		isIndexed := strings.Contains(key, "[i]")
+
+		if isIndexed {
+			if existing, ok := parentMap[key]; ok {
+				// Merge validators into existing entry
+				existing.Validators = append(existing.Validators, meta.Validators...)
+			} else {
+				// Create new entry
+				newMeta := &AnalyzedMetadata{
+					Validators:     meta.Validators,
+					ParentVariable: meta.ParentVariable,
+				}
+				parentMap[key] = newMeta
+				order = append(order, key)
+			}
+		} else {
+			// Keep non-indexed entries as-is in their original position
+			result = append(result, meta)
+		}
+	}
+
+	// Append consolidated indexed entries at the end in their order
+	for _, key := range order {
+		result = append(result, parentMap[key])
+	}
+
+	return result
 }
 
 // makeValidatorInput contains all the input parameters needed for makeValidator function.

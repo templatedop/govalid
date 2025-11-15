@@ -142,25 +142,11 @@ func ValidatePerson(t *Person) error {
 				errs = append(errs, err)
 			}
 
-		}
-	}
-
-	for i := range t.Addresses {
-		{
-			t := t.Addresses[i]
-
 			if t.City == "" {
 				err := ErrPersonAddressesiCityRequiredValidation
 				err.Value = t.City
 				errs = append(errs, err)
 			}
-
-		}
-	}
-
-	for i := range t.Addresses {
-		{
-			t := t.Addresses[i]
 
 			if utf8.RuneCountInString(t.ZipCode) > 10 {
 				err := ErrPersonAddressesiZipCodeMaxLengthValidation
