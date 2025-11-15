@@ -75,7 +75,7 @@ func (r *requiredValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is returned when the [@FIELD] is required but not provided.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] is required",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredValidation", r.structName, r.FieldName())

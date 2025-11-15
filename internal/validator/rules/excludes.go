@@ -58,7 +58,7 @@ func (e *excludesValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains the excluded substring.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must not contain: [@SUBSTR]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not contain: [@SUBSTR]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludesValidation", e.structName, e.FieldName())

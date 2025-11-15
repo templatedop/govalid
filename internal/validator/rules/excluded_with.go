@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -68,7 +67,7 @@ func (e *excluded_withValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field must be absent because other fields are present.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must be absent when any of [@FIELDS] are present",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be absent when any of [@FIELDS] are present", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludedWithValidation", e.structName, e.FieldName())
@@ -101,7 +100,7 @@ func (e *excluded_withValidator) Imports() []string {
 // ValidateExcludedWith creates a new excluded_withValidator.
 // Format: excluded_with=Field1 Field2 Field3...
 func ValidateExcludedWith(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerExcludedWith]
+	expr, ok := input.Expressions[markers.GoValidMarkerExcluded_with]
 	if !ok {
 		return nil
 	}

@@ -73,7 +73,7 @@ func (c *celValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the CEL expression evaluation fails.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] failed CEL validation: [@EXPRESSION]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] failed CEL validation: [@EXPRESSION]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sCELValidation", c.structName, c.FieldName())

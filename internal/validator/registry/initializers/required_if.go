@@ -17,5 +17,5 @@ func (r Required_ifInitializer) Marker() string {
 
 // Init initializes the required_if validator factory.
 func (r Required_ifInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateRequired_if
+	return rules.ValidateRequiredIf
 }

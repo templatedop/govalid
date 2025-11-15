@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -68,7 +67,7 @@ func (r *required_without_allValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required because all other fields are absent.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] is required when all of [@FIELDS] are absent",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required when all of [@FIELDS] are absent", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredWithoutAllValidation", r.structName, r.FieldName())
@@ -101,7 +100,7 @@ func (r *required_without_allValidator) Imports() []string {
 // ValidateRequiredWithoutAll creates a new required_without_allValidator.
 // Format: required_without_all=Field1 Field2 Field3...
 func ValidateRequiredWithoutAll(input registry.ValidatorInput) validator.Validator {
-	expr, ok := input.Expressions[markers.GoValidMarkerRequiredWithoutAll]
+	expr, ok := input.Expressions[markers.GoValidMarkerRequired_without_all]
 	if !ok {
 		return nil
 	}

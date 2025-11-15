@@ -17,5 +17,5 @@ func (r Required_withoutInitializer) Marker() string {
 
 // Init initializes the required_without validator factory.
 func (r Required_withoutInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateRequired_without
+	return rules.ValidateRequiredWithout
 }

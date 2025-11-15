@@ -17,5 +17,5 @@ func (f FqdnInitializer) Marker() string {
 
 // Init initializes the fqdn validator factory.
 func (f FqdnInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateFqdn
+	return rules.ValidateFQDN
 }

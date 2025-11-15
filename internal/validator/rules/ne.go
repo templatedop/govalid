@@ -57,18 +57,21 @@ func (n *neValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field equals [@VALUE] but should not.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must not equal [@VALUE]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not equal [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sNeValidation", n.structName, n.FieldName())
 	currentErrVarName := n.ErrVariable()
+
+	// Escape quotes in the value for error message
+	escapedValue := strings.ReplaceAll(n.neValue, `"`, `\"`)
 
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
 		"[@FIELD]", n.FieldName(),
 		"[@PATH]", n.FieldPath().String(),
-		"[@VALUE]", n.neValue,
+		"[@VALUE]", escapedValue,
 		"[@TYPE]", n.ruleName,
 	)
 

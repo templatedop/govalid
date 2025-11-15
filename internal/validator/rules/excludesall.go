@@ -58,7 +58,7 @@ func (e *excludesallValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains any of the excluded characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must not contain any of these characters: [@CHARS]",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not contain any of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludesallValidation", e.structName, e.FieldName())

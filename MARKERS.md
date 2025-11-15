@@ -560,3 +560,476 @@ govalid supports the following markers:
   }
 
   ```
+## `govalid:min`
+- **Description**: Ensures that a numeric field is greater than or equal to a specified minimum value.
+- **Example**:
+  ```go
+  type Product struct {
+      // +govalid:min=10
+      Price int `json:"price"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !(t.Price >= 10) {
+      return ErrPriceMinValidation
+  }
+  ```
+
+## `govalid:eq`
+- **Description**: Ensures that a field equals a specific value. Supports strings and numeric types.
+- **Example**:
+  ```go
+  type Status struct {
+      // +govalid:eq=active
+      State string `json:"state"`
+      // +govalid:eq=100
+      Count int `json:"count"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !(t.State == "active") {
+      return ErrStateEqValidation
+  }
+  if !(t.Count == 100) {
+      return ErrCountEqValidation
+  }
+  ```
+
+## `govalid:ne`
+- **Description**: Ensures that a field does not equal a specific value. Supports strings and numeric types.
+- **Example**:
+  ```go
+  type User struct {
+      // +govalid:ne=admin
+      Role string `json:"role"`
+      // +govalid:ne=0
+      Score int `json:"score"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !(t.Role != "admin") {
+      return ErrRoleNeValidation
+  }
+  if !(t.Score != 0) {
+      return ErrScoreNeValidation
+  }
+  ```
+
+## `govalid:isdefault`
+- **Description**: Ensures that a field has its zero/default value (opposite of required).
+- **Example**:
+  ```go
+  type Optional struct {
+      // +govalid:isdefault
+      OptionalField string `json:"optional_field"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if t.OptionalField != "" {
+      return ErrOptionalFieldIsDefaultValidation
+  }
+  ```
+
+## `govalid:boolean`
+- **Description**: Ensures that a string field represents a valid boolean value. Accepts: true, false, 1, 0, yes, no, on, off (case-insensitive).
+- **Example**:
+  ```go
+  type Settings struct {
+      // +govalid:boolean
+      Enabled string `json:"enabled"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidBoolean(t.Enabled) {
+      return ErrEnabledBooleanValidation
+  }
+  ```
+
+## `govalid:lowercase`
+- **Description**: Ensures that a string field contains only lowercase characters.
+- **Example**:
+  ```go
+  type User struct {
+      // +govalid:lowercase
+      Username string `json:"username"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsLowercase(t.Username) {
+      return ErrUsernameLowercaseValidation
+  }
+  ```
+
+## `govalid:oneof`
+- **Description**: Ensures that a field value is one of the specified options (space-separated list). Supports strings and numeric types.
+- **Example**:
+  ```go
+  type Config struct {
+      // +govalid:oneof=red green blue
+      Color string `json:"color"`
+      // +govalid:oneof=1 2 3
+      Level int `json:"level"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !(t.Color == "red" || t.Color == "green" || t.Color == "blue") {
+      return ErrColorOneofValidation
+  }
+  if !(t.Level == 1 || t.Level == 2 || t.Level == 3) {
+      return ErrLevelOneofValidation
+  }
+  ```
+
+## `govalid:number`
+- **Description**: Ensures that a string field represents a valid number (including decimals and negative values).
+- **Example**:
+  ```go
+  type Input struct {
+      // +govalid:number
+      Amount string `json:"amount"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsNumber(t.Amount) {
+      return ErrAmountNumberValidation
+  }
+  ```
+
+## `govalid:alphanum`
+- **Description**: Ensures that a string field contains only alphanumeric characters.
+- **Example**:
+  ```go
+  type Product struct {
+      // +govalid:alphanum
+      SKU string `json:"sku"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsAlphanum(t.SKU) {
+      return ErrSKUAlphanumValidation
+  }
+  ```
+
+## `govalid:containsany`
+- **Description**: Ensures that a string field contains at least one of the specified characters.
+- **Example**:
+  ```go
+  type Security struct {
+      // +govalid:containsany=!@#$
+      Password string `json:"password"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !strings.ContainsAny(t.Password, "!@#$") {
+      return ErrPasswordContainsanyValidation
+  }
+  ```
+
+## `govalid:excludes`
+- **Description**: Ensures that a string field does not contain a specified substring.
+- **Example**:
+  ```go
+  type User struct {
+      // +govalid:excludes=admin
+      Username string `json:"username"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if strings.Contains(t.Username, "admin") {
+      return ErrUsernameExcludesValidation
+  }
+  ```
+
+## `govalid:excludesall`
+- **Description**: Ensures that a string field does not contain any of the specified characters.
+- **Example**:
+  ```go
+  type Comment struct {
+      // +govalid:excludesall=<>
+      Text string `json:"text"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if strings.ContainsAny(t.Text, "<>") {
+      return ErrTextExcludesallValidation
+  }
+  ```
+
+## `govalid:unique`
+- **Description**: Ensures that all elements in a slice are unique.
+- **Example**:
+  ```go
+  type Data struct {
+      // +govalid:unique
+      Tags []string `json:"tags"`
+      // +govalid:unique
+      IDs []int `json:"ids"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if func() bool {
+      seen := make(map[interface{}]struct{})
+      for _, v := range t.Tags {
+          if _, exists := seen[v]; exists {
+              return true
+          }
+          seen[v] = struct{}{}
+      }
+      return false
+  }() {
+      return ErrTagsUniqueValidation
+  }
+  ```
+
+## `govalid:uri`
+- **Description**: Ensures that a string field is a valid URI (supports various schemes: http, https, ftp, file, etc.).
+- **Example**:
+  ```go
+  type Resource struct {
+      // +govalid:uri
+      Location string `json:"location"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidURI(t.Location) {
+      return ErrLocationUriValidation
+  }
+  ```
+
+## `govalid:fqdn`
+- **Description**: Ensures that a string field is a Fully Qualified Domain Name.
+- **Example**:
+  ```go
+  type Server struct {
+      // +govalid:fqdn
+      Hostname string `json:"hostname"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidFQDN(t.Hostname) {
+      return ErrHostnameFqdnValidation
+  }
+  ```
+
+## `govalid:latitude`
+- **Description**: Ensures that a string field represents a valid latitude (-90 to 90).
+- **Example**:
+  ```go
+  type Location struct {
+      // +govalid:latitude
+      Lat string `json:"lat"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidLatitude(t.Lat) {
+      return ErrLatLatitudeValidation
+  }
+  ```
+
+## `govalid:longitude`
+- **Description**: Ensures that a string field represents a valid longitude (-180 to 180).
+- **Example**:
+  ```go
+  type Location struct {
+      // +govalid:longitude
+      Lon string `json:"lon"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidLongitude(t.Lon) {
+      return ErrLonLongitudeValidation
+  }
+  ```
+
+## `govalid:iscolour` / `govalid:iscolor`
+- **Description**: Ensures that a string field represents a valid color. Supports hex (#RGB, #RRGGBB, #RRGGBBAA), rgb/rgba, hsl/hsla, and common named colors.
+- **Example**:
+  ```go
+  type Theme struct {
+      // +govalid:iscolour
+      Primary string `json:"primary"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if !validationhelper.IsValidColour(t.Primary) {
+      return ErrPrimaryIscolourValidation
+  }
+  ```
+
+## `govalid:minduration`
+- **Description**: Ensures that a time.Duration field is at least the specified minimum duration.
+- **Example**:
+  ```go
+  type Config struct {
+      // +govalid:minduration=1h
+      Timeout time.Duration `json:"timeout"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if func() bool { d, _ := time.ParseDuration("1h"); return t.Timeout < d }() {
+      return ErrTimeoutMindurationValidation
+  }
+  ```
+
+## `govalid:maxduration`
+- **Description**: Ensures that a time.Duration field does not exceed the specified maximum duration.
+- **Example**:
+  ```go
+  type Config struct {
+      // +govalid:maxduration=24h
+      Interval time.Duration `json:"interval"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if func() bool { d, _ := time.ParseDuration("24h"); return t.Interval > d }() {
+      return ErrIntervalMaxdurationValidation
+  }
+  ```
+
+## Conditional Validators
+
+### `govalid:required_if`
+- **Description**: Field is required if another field equals a specific value.
+- **Format**: `required_if=FieldName Value`
+- **Example**:
+  ```go
+  type Form struct {
+      Status string
+      // +govalid:required_if=Status active
+      ActiveField string `json:"active_field"`
+  }
+  ```
+- **Generated Code**:
+  ```go
+  if t.Status == "active" && t.ActiveField == "" {
+      return ErrActiveFieldRequiredIfValidation
+  }
+  ```
+
+### `govalid:required_unless`
+- **Description**: Field is required unless another field equals a specific value.
+- **Format**: `required_unless=FieldName Value`
+- **Example**:
+  ```go
+  type Form struct {
+      Status string
+      // +govalid:required_unless=Status inactive
+      ActiveField string `json:"active_field"`
+  }
+  ```
+
+### `govalid:required_with`
+- **Description**: Field is required when any of the specified fields are present (non-zero).
+- **Format**: `required_with=Field1 Field2 ...`
+- **Example**:
+  ```go
+  type Form struct {
+      Email string
+      // +govalid:required_with=Email
+      EmailConfirmation string `json:"email_confirmation"`
+  }
+  ```
+
+### `govalid:required_with_all`
+- **Description**: Field is required when all of the specified fields are present (non-zero).
+- **Format**: `required_with_all=Field1 Field2 ...`
+- **Example**:
+  ```go
+  type Form struct {
+      FirstName string
+      LastName  string
+      // +govalid:required_with_all=FirstName LastName
+      FullName string `json:"full_name"`
+  }
+  ```
+
+### `govalid:required_without`
+- **Description**: Field is required when any of the specified fields are absent (zero value).
+- **Format**: `required_without=Field1 Field2 ...`
+- **Example**:
+  ```go
+  type Contact struct {
+      Phone string
+      // +govalid:required_without=Phone
+      Email string `json:"email"`
+  }
+  ```
+
+### `govalid:required_without_all`
+- **Description**: Field is required when all of the specified fields are absent (zero value).
+- **Format**: `required_without_all=Field1 Field2 ...`
+- **Example**:
+  ```go
+  type Contact struct {
+      Phone string
+      Fax   string
+      // +govalid:required_without_all=Phone Fax
+      Email string `json:"email"`
+  }
+  ```
+
+### `govalid:excluded_if`
+- **Description**: Field must be absent (zero value) if another field equals a specific value.
+- **Format**: `excluded_if=FieldName Value`
+- **Example**:
+  ```go
+  type Form struct {
+      Status string
+      // +govalid:excluded_if=Status inactive
+      InactiveField string `json:"inactive_field"`
+  }
+  ```
+
+### `govalid:excluded_unless`
+- **Description**: Field must be absent unless another field equals a specific value.
+- **Format**: `excluded_unless=FieldName Value`
+
+### `govalid:excluded_with`
+- **Description**: Field must be absent when any of the specified fields are present.
+- **Format**: `excluded_with=Field1 Field2 ...`
+
+### `govalid:excluded_with_all`
+- **Description**: Field must be absent when all of the specified fields are present.
+- **Format**: `excluded_with_all=Field1 Field2 ...`
+
+### `govalid:excluded_without`
+- **Description**: Field must be absent when any of the specified fields are absent.
+- **Format**: `excluded_without=Field1 Field2 ...`
+
+### `govalid:excluded_without_all`
+- **Description**: Field must be absent when all of the specified fields are absent.
+- **Format**: `excluded_without_all=Field1 Field2 ...`
+
+## Summary
+
+govalid now supports **52 validators** covering:
+- ✅ Numeric validation (gt, gte, lt, lte, min, eq, ne)
+- ✅ String validation (length, pattern, format)
+- ✅ Collection validation (size, uniqueness)
+- ✅ Format validation (email, URL, UUID, IP, coordinates, colors)
+- ✅ Type validation (boolean, numeric, alphanumeric)
+- ✅ Duration validation (min/max duration)
+- ✅ Conditional validation (12 cross-field validators)
+- ✅ Advanced CEL expressions
+
+All validators generate **zero-allocation, type-safe** validation code with comprehensive error messages.

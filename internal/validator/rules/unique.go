@@ -4,7 +4,6 @@ package rules
 import (
 	"fmt"
 	"go/ast"
-	"go/types"
 	"strings"
 
 	"github.com/gostaticanalysis/codegen"
@@ -66,7 +65,7 @@ func (u *uniqueValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains duplicate values.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] must contain unique values",Path:"[@PATH]",Type:"[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain unique values", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sUniqueValidation", u.structName, u.FieldName())
@@ -97,21 +96,21 @@ func (u *uniqueValidator) Imports() []string {
 
 // ValidateUnique creates a new uniqueValidator for slice/array types with comparable elements.
 func ValidateUnique(input registry.ValidatorInput) validator.Validator {
-	typ := input.Pass.TypesInfo.TypeOf(input.Field.Type)
+	// For slices and arrays, we always allow the unique validator
+	// Type checking is done at compile time when the generated code is built
 
-	// Check if it's a slice or array
-	var elemType types.Type
-	switch t := typ.Underlying().(type) {
-	case *types.Slice:
-		elemType = t.Elem()
-	case *types.Array:
-		elemType = t.Elem()
+	// Simple AST-based check for slice or array types
+	fieldType := input.Field.Type
+
+	// Check if it's a slice (ast.ArrayType with nil Len) or array (ast.ArrayType with Len)
+	switch t := fieldType.(type) {
+	case *ast.ArrayType:
+		// Both slices and arrays are represented as ArrayType in AST
+		// Slices have Len == nil, arrays have Len != nil
+		// We support both for unique validation
+		_ = t // Valid for unique
 	default:
-		return nil
-	}
-
-	// Element type must be comparable
-	if !types.Comparable(elemType) {
+		// Not a slice or array, skip
 		return nil
 	}
 

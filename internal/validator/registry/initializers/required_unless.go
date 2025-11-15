@@ -17,5 +17,5 @@ func (r Required_unlessInitializer) Marker() string {
 
 // Init initializes the required_unless validator factory.
 func (r Required_unlessInitializer) Init() registry.ValidatorFactory {
-	return rules.ValidateRequired_unless
+	return rules.ValidateRequiredUnless
 }

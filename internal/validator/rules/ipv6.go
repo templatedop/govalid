@@ -54,7 +54,7 @@ func (v *ipv6Validator) Err() string {
 
 	const errTemplate = `
 	  // [@ERRVARIABLE] is returned when the [@FIELD] fails ipv6 validation.
-	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason:"field [@FIELD] failed ipv6 validation",Path:"[@PATH]",Type:"[@TYPE]"}
+	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] failed ipv6 validation", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sIpv6Validation", v.structName, v.FieldName())
