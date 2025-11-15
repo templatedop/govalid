@@ -29,6 +29,8 @@ const oneofKey = "%s-oneof"
 
 func (o *oneofValidator) Validate() string {
 	fieldName := o.FieldName()
+	typ := o.pass.TypesInfo.TypeOf(o.field.Type)
+
 	// Generate a validation that checks if the value is in the list
 	values := strings.Split(o.values, " ")
 	var conditions []string
@@ -37,9 +39,11 @@ func (o *oneofValidator) Validate() string {
 		if v == "" {
 			continue
 		}
-		// Wrap in quotes if not already quoted
-		if !strings.HasPrefix(v, `"`) && !strings.HasPrefix(v, "`") {
-			v = fmt.Sprintf(`"%s"`, v)
+		// Only wrap in quotes for string types
+		if basic, ok := typ.Underlying().(*types.Basic); ok && basic.Kind() == types.String {
+			if !strings.HasPrefix(v, `"`) && !strings.HasPrefix(v, "`") {
+				v = fmt.Sprintf(`"%s"`, v)
+			}
 		}
 		conditions = append(conditions, fmt.Sprintf("t.%s == %s", fieldName, v))
 	}

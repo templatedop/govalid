@@ -32,7 +32,7 @@ func ValidateOneOf(t *OneOf) error {
 		errs = append(errs, err)
 	}
 
-	if !(t.Level == "1" || t.Level == "2" || t.Level == "3") {
+	if !(t.Level == 1 || t.Level == 2 || t.Level == 3) {
 		err := ErrOneOfLevelOneofValidation
 		err.Value = t.Level
 		errs = append(errs, err)

@@ -356,30 +356,30 @@ type ExcludedUnless struct {
 }
 
 type ExcludedWith struct {
-	GuestMode bool
+	GuestMode string
 
 	// +govalid:excluded_with=GuestMode
 	AdminPanel string `validate:"excluded_with=GuestMode" json:"admin_panel"`
 }
 
 type ExcludedWithAll struct {
-	ReadOnly  bool
-	Archived  bool
+	ReadOnly  string
+	Archived  string
 
 	// +govalid:excluded_with_all=ReadOnly Archived
 	EditButton string `validate:"excluded_with_all=ReadOnly Archived" json:"edit_button"`
 }
 
 type ExcludedWithout struct {
-	Premium bool
+	Premium string
 
 	// +govalid:excluded_without=Premium
 	FreeFeature string `validate:"excluded_without=Premium" json:"free_feature"`
 }
 
 type ExcludedWithoutAll struct {
-	FeatureA bool
-	FeatureB bool
+	FeatureA string
+	FeatureB string
 
 	// +govalid:excluded_without_all=FeatureA FeatureB
 	ConflictingFeature string `validate:"excluded_without_all=FeatureA FeatureB" json:"conflicting_feature"`
