@@ -266,18 +266,57 @@ type UserList struct {
 
 For a complete reference of all supported markers, see [MARKERS.md](MARKERS.md).
 
-**Core Validators:**
+**Numeric Validators:**
 - `required` - Field must not be zero value
-- `gt`, `gte`, `lt`, `lte` - Numeric comparisons
-- `maxlength`, `minlength` - String length validation
+- `gt`, `gte`, `lt`, `lte` - Greater than, greater/equal, less than, less/equal
+- `min` - Minimum value (inclusive)
+- `eq` - Equals specific value
+- `ne` - Not equals specific value
+
+**String Validators:**
+- `maxlength`, `minlength`, `length` - String length validation
+- `alpha` - Alphabetic characters only
+- `alphanum` - Alphanumeric characters only
+- `lowercase` - Must be all lowercase
+- `oneof` - Value must be one of specified options
+- `containsany` - Must contain any of specified characters
+- `excludes` - Must not contain substring
+- `excludesall` - Must not contain any of specified characters
+
+**Collection Validators:**
 - `maxitems`, `minitems` - Collection size validation
+- `unique` - All elements must be unique
+
+**Format Validators:**
+- `email`, `url`, `uuid` - Standard format validation
+- `uri` - URI format validation
+- `fqdn` - Fully Qualified Domain Name
+- `ipv4`, `ipv6` - IP address validation
+- `latitude`, `longitude` - Geographic coordinate validation
+- `iscolour` - Color format (hex, rgb, rgba, hsl, hsla, named)
+- `number`, `numeric` - Numeric string validation
+- `boolean` - Boolean string validation
+
+**Type Validators:**
+- `isdefault` - Must be zero/default value
 - `enum` - Enumeration validation
-- `email`, `url`, `uuid`, `numeric` - Format validation
+
+**Duration Validators:**
+- `minduration`, `maxduration` - Time duration constraints
+
+**Conditional Validators:**
+- `required_if`, `required_unless` - Conditional required based on other field value
+- `required_with`, `required_with_all` - Required when other fields present
+- `required_without`, `required_without_all` - Required when other fields absent
+- `excluded_if`, `excluded_unless` - Conditional exclusion based on other field value
+- `excluded_with`, `excluded_with_all` - Excluded when other fields present
+- `excluded_without`, `excluded_without_all` - Excluded when other fields absent
 
 **Advanced:**
-- `cel` - Common Expression Language support
+- `cel` - Common Expression Language support for complex expressions
+- `date` - Date format validation
 - Struct-level markers
-- Custom validation logic
+- Cross-field validation
 
 </details>
 
