@@ -247,8 +247,34 @@ func normalizeValidateToken(pass *analysis.Pass, field *ast.Field, token string)
 
 	// Map synonyms to internal marker names.
 	switch keyLower {
+	// Original validators
 	case "required", "email", "uuid", "url", "numeric", "ipv4", "ipv6", "alpha", "enum", "cel", "lt", "lte", "gt", "gte", "length", "date", "dive":
 		// direct mapping
+	// New simple validators
+	case "eq", "ne", "isdefault", "boolean", "lowercase", "oneof", "number", "alphanum":
+		// direct mapping
+	// String pattern validators
+	case "containsany", "excludes", "excludesall":
+		// direct mapping
+	// Collection validators
+	case "unique":
+		// direct mapping
+	// Format validators
+	case "uri", "fqdn", "latitude", "longitude", "iscolour", "iscolor":
+		if keyLower == "iscolor" {
+			keyLower = "iscolour" // US spelling -> UK spelling
+		}
+		// direct mapping
+	// Time/Duration validators
+	case "minduration", "maxduration":
+		// direct mapping
+	// Conditional required validators
+	case "required_if", "required_unless", "required_with", "required_with_all", "required_without", "required_without_all":
+		// direct mapping
+	// Conditional excluded validators
+	case "excluded_if", "excluded_unless", "excluded_with", "excluded_with_all", "excluded_without", "excluded_without_all":
+		// direct mapping
+	// Synonym mappings
 	case "len":
 		keyLower = "length"
 	case "max":
