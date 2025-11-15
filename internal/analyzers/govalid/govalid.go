@@ -1,0 +1,459 @@
+package govalid
+
+import (
+	"bytes"
+	"fmt"
+	"go/ast"
+	"go/format"
+	"go/token"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+	"testing"
+	"text/template"
+
+	"github.com/gostaticanalysis/codegen"
+	"golang.org/x/tools/go/analysis"
+	"golang.org/x/tools/go/analysis/passes/inspect"
+	"golang.org/x/tools/go/ast/inspector"
+	"golang.org/x/tools/imports"
+
+	"github.com/sivchari/govalid/internal/analyzers/markers"
+	govaliderrors "github.com/sivchari/govalid/internal/errors"
+	"github.com/sivchari/govalid/internal/validator"
+	"github.com/sivchari/govalid/internal/validator/registry"
+)
+
+const (
+	// Name is the name of the govalid generator.
+	Name = "govalid"
+	// Doc is the documentation for the govalid generator.
+	Doc = "govalid generates type-safe validation code for structs based on markers."
+)
+
+var (
+	// dryRun indicates whether the generator should run in dry-run mode.
+	dryRun bool
+)
+
+// generator is the main type for the govalid analyzer.
+type generator struct{}
+
+// newGenerator creates a new instance of the govalid generator.
+func newGenerator() (*codegen.Generator, error) {
+	g := &generator{}
+
+	generator := &codegen.Generator{
+		Name:     Name,
+		Doc:      Doc,
+		Run:      g.run,
+		Requires: []*analysis.Analyzer{inspect.Analyzer, markers.Analyzer},
+	}
+
+	return generator, nil
+}
+
+// TemplateData holds the data for the template used to generate validation code.
+type TemplateData struct {
+	PackageName    string
+	TypeName       string
+	Metadata       []*AnalyzedMetadata
+	ImportPackages map[string]struct{}
+}
+
+// run is the main function that runs the govalid analyzer.
+func (g *generator) run(pass *codegen.Pass) error {
+	inspector, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return govaliderrors.ErrCouldNotGetInspector
+	}
+
+	markersInspect, ok := pass.ResultOf[markers.Analyzer].(markers.Markers)
+	if !ok {
+		return govaliderrors.ErrCouldNotGetInspector
+	}
+
+	nodeFilter := []ast.Node{
+		(*ast.GenDecl)(nil),
+	}
+
+	// Build a map of named struct types in the package for resolving dive element types.
+	typeMap := map[string]*ast.StructType{}
+	inspector.Preorder(nodeFilter, func(n ast.Node) {
+		genDecl, ok := n.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			return
+		}
+		for _, spec := range genDecl.Specs {
+			ts, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+			if st, ok := ts.Type.(*ast.StructType); ok {
+				typeMap[ts.Name.Name] = st
+			}
+		}
+	})
+
+	tmplList := map[string]TemplateData{}
+
+	inspector.Preorder(nodeFilter, func(n ast.Node) {
+		genDecl, ok := n.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			return
+		}
+
+		for _, spec := range genDecl.Specs {
+			ts, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				return
+			}
+
+			typeMarkers := markersInspect.TypeMarkers(ts)
+
+			structType, ok := ts.Type.(*ast.StructType)
+			if !ok {
+				return
+			}
+
+			metadata := analyzeMarker(pass, markersInspect, typeMarkers, structType, "", ts.Name.Name, typeMap)
+			if len(metadata) == 0 {
+				return
+			}
+
+			tmplData := TemplateData{
+				PackageName:    pass.Pkg.Name(),
+				TypeName:       ts.Name.Name,
+				Metadata:       metadata,
+				ImportPackages: collectImportPackages(metadata),
+			}
+
+			data, ok := tmplList[ts.Name.Name]
+			if ok {
+				data.Metadata = append(data.Metadata, tmplData.Metadata...)
+			}
+
+			if err := writeFile(pass, ts, tmplData); err != nil {
+				panic(fmt.Sprintf("failed to write file for %s: %v", ts.Name.Name, err))
+			}
+		}
+	})
+
+	return nil
+}
+
+// AnalyzedMetadata holds the metadata for a field in a struct, including its validators and parent variable name.
+type AnalyzedMetadata struct {
+	Validators     []validator.Validator
+	ParentVariable string
+}
+
+// makeValidatorInput contains all the input parameters needed for makeValidator function.
+type makeValidatorInput struct {
+	Pass       *codegen.Pass
+	Markers    []markers.Marker
+	Field      *ast.Field
+	StructName string
+	ParentPath string
+}
+
+//nolint:funlen // This function is complex but cohesive - it handles complete field analysis including nested structs
+func analyzeMarker(pass *codegen.Pass, markersInspect markers.Markers, typeMarkers markers.MarkerSet, structType *ast.StructType, parent, structName string, typeMap map[string]*ast.StructType) []*AnalyzedMetadata {
+	analyzed := make([]*AnalyzedMetadata, 0)
+
+	typeMarkersList := make([]markers.Marker, 0, len(typeMarkers))
+	for _, marker := range typeMarkers {
+		typeMarkersList = append(typeMarkersList, marker)
+	}
+
+	sort.SliceStable(typeMarkersList, func(i, j int) bool {
+		return typeMarkersList[i].Identifier < typeMarkersList[j].Identifier
+	})
+
+	for _, field := range structType.Fields.List {
+		validators := make([]validator.Validator, 0)
+
+		// Apply markers to the field
+		fieldMarkers := markersInspect.FieldMarkers(field)
+
+		fieldMarkersList := make([]markers.Marker, 0, len(fieldMarkers))
+		for _, marker := range fieldMarkers {
+			fieldMarkersList = append(fieldMarkersList, marker)
+		}
+
+		sort.SliceStable(fieldMarkersList, func(i, j int) bool {
+			return fieldMarkersList[i].Identifier < fieldMarkersList[j].Identifier
+		})
+
+		markersList := make([]markers.Marker, 0, len(typeMarkersList)+len(fieldMarkersList))
+		markersList = append(markersList, typeMarkersList...)
+		markersList = append(markersList, fieldMarkersList...)
+
+		input := makeValidatorInput{
+			Pass:       pass,
+			Markers:    markersList,
+			Field:      field,
+			StructName: structName,
+			ParentPath: parent,
+		}
+
+		// Check for dive marker on collection types to validate nested elements.
+		hasDive := false
+		for _, m := range markersList {
+			if m.Identifier == "govalid:dive" {
+				hasDive = true
+				break
+			}
+		}
+
+		// If not a struct and no dive, treat as a regular field.
+		if _, ok := field.Type.(*ast.StructType); !ok && !hasDive {
+			validators = makeValidator(input)
+			if len(validators) == 0 {
+				continue
+			}
+
+			analyzed = append(analyzed, &AnalyzedMetadata{
+				Validators:     validators,
+				ParentVariable: parent,
+			})
+
+			continue
+		}
+
+		// If the field is an inline struct, process it as before.
+		if st, ok := field.Type.(*ast.StructType); ok && !hasDive {
+			for _, f := range st.Fields.List {
+				input.Field = f
+				validators = append(validators, makeValidator(input)...)
+			}
+
+			var parentVariable string
+			if parent != "" {
+				parentVariable = fmt.Sprintf("%s.%s", parent, field.Names[0].Name)
+			} else {
+				parentVariable = field.Names[0].Name
+			}
+
+			if len(validators) > 0 {
+				analyzed = append(analyzed, &AnalyzedMetadata{
+					Validators:     validators,
+					ParentVariable: parentVariable,
+				})
+			}
+
+			// Recursively analyze nested inline structs
+			analyzed = append(analyzed, analyzeMarker(pass, markersInspect, typeMarkers, st, parentVariable, structName, typeMap)...)
+			continue
+		}
+
+		// Handle dive for slices/arrays of structs (including named or pointer-to-struct elements),
+		// and also for direct/named struct fields when 'dive' is present.
+		if hasDive {
+			// Keep field-level validators (except dive itself)
+			filtered := make([]markers.Marker, 0, len(markersList))
+			for _, m := range markersList {
+				if m.Identifier == "govalid:dive" {
+					continue
+				}
+				filtered = append(filtered, m)
+			}
+			input.Markers = filtered
+			validators = makeValidator(input)
+			if len(validators) > 0 {
+				analyzed = append(analyzed, &AnalyzedMetadata{
+					Validators:     validators,
+					ParentVariable: parent,
+				})
+			}
+
+			// First, try to resolve element struct type for collections and validate elements.
+			elt := resolveElementType(field.Type)
+			if elt != nil {
+				if elStruct := resolveStructTypeFromExpr(elt, typeMap); elStruct != nil {
+					// Parent variable becomes Field[i]
+					var base string
+					if parent != "" {
+						base = fmt.Sprintf("%s.%s", parent, field.Names[0].Name)
+					} else {
+						base = field.Names[0].Name
+					}
+					idxParent := fmt.Sprintf("%s[i]", base)
+					// Analyze element struct using the parent type name to keep full path
+					analyzed = append(analyzed, analyzeMarker(pass, markersInspect, nil, elStruct, idxParent, structName, typeMap)...)
+				}
+				// Done handling collection dive.
+				continue
+			}
+
+			// If not a collection, support dive for direct/named struct fields as well.
+			if target := resolveStructTypeFromExpr(field.Type, typeMap); target != nil {
+				// Parent variable becomes Field (no index)
+				var base string
+				if parent != "" {
+					base = fmt.Sprintf("%s.%s", parent, field.Names[0].Name)
+				} else {
+					base = field.Names[0].Name
+				}
+				// Analyze nested struct
+				analyzed = append(analyzed, analyzeMarker(pass, markersInspect, nil, target, base, structName, typeMap)...)
+				continue
+			}
+
+			continue
+		}
+
+		// Fallback: treat as regular field if none of the above matched
+		validators = makeValidator(input)
+		if len(validators) == 0 {
+			continue
+		}
+		analyzed = append(analyzed, &AnalyzedMetadata{
+			Validators:     validators,
+			ParentVariable: parent,
+		})
+	}
+
+	return analyzed
+}
+
+// resolveElementType extracts the element expression from array/slice/pointer types.
+func resolveElementType(expr ast.Expr) ast.Expr {
+	switch t := expr.(type) {
+	case *ast.ArrayType:
+		return t.Elt
+	case *ast.StarExpr:
+		return resolveElementType(t.X)
+	default:
+		return nil
+	}
+}
+
+// resolveStructTypeFromExpr resolves a struct type from an ast.Expr using the provided type map.
+func resolveStructTypeFromExpr(expr ast.Expr, typeMap map[string]*ast.StructType) *ast.StructType {
+	switch e := expr.(type) {
+	case *ast.StructType:
+		return e
+	case *ast.StarExpr:
+		return resolveStructTypeFromExpr(e.X, typeMap)
+	case *ast.Ident:
+		if st, ok := typeMap[e.Name]; ok {
+			return st
+		}
+		return nil
+	default:
+		return nil
+	}
+}
+
+func makeValidator(input makeValidatorInput) []validator.Validator {
+	validators := make([]validator.Validator, 0)
+
+	for _, marker := range input.Markers {
+		factory, err := registry.Validator(marker.Identifier)
+		if err != nil {
+			// Validator not found, skip
+			continue
+		}
+
+		ruleName := strings.TrimPrefix(marker.Identifier, "govalid:")
+
+		validatorInput := registry.ValidatorInput{
+			Pass:        input.Pass,
+			Field:       input.Field,
+			Expressions: marker.Expressions,
+			StructName:  input.StructName,
+			RuleName:    ruleName,
+			ParentPath:  input.ParentPath,
+		}
+		v := factory(validatorInput)
+
+		if v == nil {
+			continue
+		}
+
+		validators = append(validators, v)
+	}
+
+	return validators
+}
+
+// collectImportPackages analyzes validators and collects required import packages.
+func collectImportPackages(metadata []*AnalyzedMetadata) map[string]struct{} {
+	packages := make(map[string]struct{})
+
+	for _, meta := range metadata {
+		for _, validator := range meta.Validators {
+			for _, pkg := range validator.Imports() {
+				packages[pkg] = struct{}{}
+			}
+		}
+	}
+
+	return packages
+}
+
+func writeFile(pass *codegen.Pass, ts *ast.TypeSpec, tmplData TemplateData) error {
+	t, err := template.New("validator").Funcs(template.FuncMap{
+		"trimDots": func(s string) string {
+			return strings.ReplaceAll(s, ".", "")
+		},
+		"hasIndex": func(s string) bool {
+			return strings.Contains(s, "[i]")
+		},
+		"indexBase": func(s string) string {
+			// convert something like Parent.Field[i] to Parent.Field
+			return strings.TrimSuffix(s, "[i]")
+		},
+	}).Parse(ValidationTemplate)
+	if err != nil {
+		return fmt.Errorf("failed to parse template: %w", err)
+	}
+
+	var buf bytes.Buffer
+	if err := t.Execute(&buf, tmplData); err != nil {
+		return fmt.Errorf("failed to execute template: %w", err)
+	}
+
+	// Use goimports to format the source code with proper import grouping
+	src, err := imports.Process("", buf.Bytes(), nil)
+	if err != nil {
+		return fmt.Errorf("failed to format source code with imports: %w", err)
+	}
+
+	src, err = format.Source(src)
+	if err != nil {
+		return fmt.Errorf("failed to format source code: %w", err)
+	}
+
+	if testing.Testing() || dryRun {
+		if _, err := pass.Print(string(src)); err != nil {
+			return fmt.Errorf("failed to print source code: %w", err)
+		}
+
+		return nil
+	}
+
+	originalFilePath := pass.Fset.Position(ts.Pos()).Filename
+	fileName := strings.TrimSuffix(filepath.Base(originalFilePath), filepath.Ext(originalFilePath))
+	typeName := ts.Name.Name
+	fileName = fmt.Sprintf("%s_%s_validator.go", fileName, strings.ToLower(typeName))
+
+	file, err := os.Create(filepath.Clean(fileName))
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Printf("failed to close file: %v\n", err)
+		}
+	}()
+
+	if _, err := fmt.Fprint(file, string(src)); err != nil {
+		return fmt.Errorf("failed to write to file: %w", err)
+	}
+
+	return nil
+}

@@ -1,0 +1,30 @@
+package tests
+
+import (
+	"testing"
+
+	"github.com/gostaticanalysis/codegen/codegentest"
+
+	"github.com/sivchari/govalid/internal/analyzers/govalid"
+	"github.com/sivchari/govalid/internal/analyzers/markers"
+	"github.com/sivchari/govalid/internal/analyzers/registry"
+)
+
+func TestMultiple(t *testing.T) {
+	registry := registry.NewRegistry(
+		registry.AddAnalyzers(markers.Initializer()),
+		registry.AddGenerators(govalid.Initializer()),
+	)
+
+	if err := registry.Init(nil); err != nil {
+		t.Fatalf("failed to initialize analyzers: %v", err)
+	}
+
+	govalid, err := registry.Generator(govalid.Name)
+	if err != nil {
+		t.Fatalf("failed to get govalid generator: %v", err)
+	}
+
+	results := codegentest.Run(t, codegentest.TestData(), govalid, "multiple")
+	codegentest.Golden(t, results, update)
+}
