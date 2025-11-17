@@ -8,8 +8,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type alphaValidator struct {
@@ -82,7 +82,7 @@ func (v *alphaValidator) ErrVariable() string {
 
 func (v *alphaValidator) Imports() []string {
 	// Import validation helper package
-	return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+	return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 
 // ValidateAlpha creates a new alphaValidator for string types.

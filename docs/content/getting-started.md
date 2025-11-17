@@ -13,7 +13,7 @@ This guide will help you get up and running with govalid in just a few minutes.
 Install the govalid command-line tool:
 
 ```bash
-go install github.com/sivchari/govalid/cmd/govalid@latest
+go install github.com/templatedop/govalid/cmd/govalid@latest
 ```
 
 Verify the installation:
@@ -261,4 +261,4 @@ func CreateUser(req *CreateUserRequest) error {
 - Check out all [available validators](/validators/)
 - See [performance benchmarks](/benchmarks/)
 - Browse [example implementations](/examples/)
-- View the [source code](https://github.com/sivchari/govalid)
+- View the [source code](https://github.com/templatedop/govalid)

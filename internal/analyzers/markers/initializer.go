@@ -5,8 +5,8 @@ import (
 
 	"golang.org/x/tools/go/analysis"
 
-	"github.com/sivchari/govalid/internal/analyzers/registry"
-	"github.com/sivchari/govalid/internal/config"
+	"github.com/templatedop/govalid/internal/analyzers/registry"
+	"github.com/templatedop/govalid/internal/config"
 )
 
 // Initializer returns a new instance of the initializer for the markers analyzer.

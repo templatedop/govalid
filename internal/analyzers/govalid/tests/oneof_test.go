@@ -7,9 +7,9 @@ import (
 
 	"github.com/gostaticanalysis/codegen/codegentest"
 
-	"github.com/sivchari/govalid/internal/analyzers/govalid"
-	"github.com/sivchari/govalid/internal/analyzers/markers"
-	"github.com/sivchari/govalid/internal/analyzers/registry"
+	"github.com/templatedop/govalid/internal/analyzers/govalid"
+	"github.com/templatedop/govalid/internal/analyzers/markers"
+	"github.com/templatedop/govalid/internal/analyzers/registry"
 )
 
 func TestOneof(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestMaxDurationValidation(t *testing.T) {

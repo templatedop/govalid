@@ -9,8 +9,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type lowercaseValidator struct {
@@ -82,7 +82,7 @@ func (l *lowercaseValidator) ErrVariable() string {
 }
 
 func (l *lowercaseValidator) Imports() []string {
-	return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+	return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 
 // ValidateLowercase creates a new lowercaseValidator for string types.

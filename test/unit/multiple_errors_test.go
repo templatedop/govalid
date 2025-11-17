@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestValidateMultipleErrors_Is(t *testing.T) {

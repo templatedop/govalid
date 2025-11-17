@@ -98,7 +98,7 @@ package main
 
 import (
 	"errors"
-	"github.com/sivchari/govalid/validation/validationhelper"
+	"github.com/templatedop/govalid/validation/validationhelper"
 )
 
 var (

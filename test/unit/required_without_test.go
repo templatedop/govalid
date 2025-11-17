@@ -3,7 +3,7 @@ package unit
 import (
 	"testing"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestRequiredWithoutValidation(t *testing.T) {

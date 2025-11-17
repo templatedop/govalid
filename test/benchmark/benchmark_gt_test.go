@@ -7,7 +7,7 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func BenchmarkGoValidGT(b *testing.B) {

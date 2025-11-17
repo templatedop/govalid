@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/sivchari/govalid/validation/middleware"
-	"github.com/sivchari/govalid/validation/middleware/testfixture"
+	"github.com/templatedop/govalid/validation/middleware"
+	"github.com/templatedop/govalid/validation/middleware/testfixture"
 )
 
 func TestValidateRequest(t *testing.T) {

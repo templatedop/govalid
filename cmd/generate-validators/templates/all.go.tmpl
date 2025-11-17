@@ -2,7 +2,7 @@
 package initializers
 
 import (
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 // All returns all built-in validator initializers.

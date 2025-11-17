@@ -19,10 +19,10 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 	"golang.org/x/tools/imports"
 
-	"github.com/sivchari/govalid/internal/analyzers/markers"
-	govaliderrors "github.com/sivchari/govalid/internal/errors"
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/analyzers/markers"
+	govaliderrors "github.com/templatedop/govalid/internal/errors"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 const (

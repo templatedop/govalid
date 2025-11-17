@@ -3,8 +3,8 @@ package unit
 import (
 	"testing"
 
-	"github.com/sivchari/govalid"
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestValidator(t *testing.T) {

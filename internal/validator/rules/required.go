@@ -9,9 +9,9 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
-	"github.com/sivchari/govalid/internal/validator/validatorhelper"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator/validatorhelper"
 )
 
 type requiredValidator struct {

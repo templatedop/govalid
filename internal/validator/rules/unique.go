@@ -8,8 +8,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type uniqueValidator struct {

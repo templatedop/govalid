@@ -62,7 +62,7 @@ import (
     "strings"
     
     "github.com/gostaticanalysis/codegen"
-    "github.com/sivchari/govalid/internal/validator"
+    "github.com/templatedop/govalid/internal/validator"
 )
 
 type phonenumberValidator struct {
@@ -204,7 +204,7 @@ package unit
 
 import (
     "testing"
-    "github.com/sivchari/govalid/test"
+    "github.com/templatedop/govalid/test"
 )
 
 func TestPhonenumberValidation(t *testing.T) {
@@ -242,7 +242,7 @@ package benchmark
 import (
     "testing"
     "github.com/go-playground/validator/v10"
-    "github.com/sivchari/govalid/test"
+    "github.com/templatedop/govalid/test"
 )
 
 func BenchmarkGoValidPhonenumber(b *testing.B) {
@@ -365,7 +365,7 @@ func (v *phonenumberValidator) Validate() string {
 }
 
 func (v *phonenumberValidator) Imports() []string {
-    return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+    return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 ```
 

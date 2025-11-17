@@ -8,8 +8,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type urlValidator struct {
@@ -82,7 +82,7 @@ func (u *urlValidator) ErrVariable() string {
 }
 
 func (u *urlValidator) Imports() []string {
-	return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+	return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 
 // ValidateURL creates a new urlValidator for string types.

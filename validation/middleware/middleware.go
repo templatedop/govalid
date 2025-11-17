@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/sivchari/govalid"
+	"github.com/templatedop/govalid"
 )
 
 // ValidateRequest returns a middleware that validates the request body using the provided Validator type.
