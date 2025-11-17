@@ -82,20 +82,34 @@ govalid -h
 
 ## 🎯 Quick Start
 
-### 1. Define Your Struct
+### 1. Define Your Struct with Markers
+
+Add validation markers as comments above individual fields:
+
 ```go
-// Add validation markers above your struct
-// +govalid:required
+package main
+
+//go:generate govalid ./main.go
+
 type Person struct {
-    Name  string `json:"name"`
+    // +govalid:required
+    Name string `json:"name"`
+
     // +govalid:email
     Email string `json:"email"`
+
+    // +govalid:gte=18
+    // +govalid:lte=120
+    Age int `json:"age"`
 }
 ```
 
 ### 2. Generate Validation Code
+
+Run `go generate` in your package directory:
+
 ```bash
-govalid generate
+go generate ./...
 ```
 
 This generates validation code like:
@@ -222,16 +236,19 @@ func main() {
 
 ## 🔧 Advanced Features
 
-### Struct-Level Validation
-Apply validation rules to entire structs:
+### Multiple Validators on a Field
+Apply multiple validation rules to a single field:
 
 ```go
-// All fields will be validated as required
-// +govalid:required
 type Person struct {
-    Name  string
-    Email string
-    Age   int
+    // +govalid:required
+    // +govalid:minlength=3
+    // +govalid:maxlength=50
+    Name string
+
+    // +govalid:gte=18
+    // +govalid:lte=120
+    Age int
 }
 ```
 
@@ -242,20 +259,64 @@ Use Common Expression Language for complex validation:
 type User struct {
     // +govalid:cel=value >= 18 && value <= 120
     Age int
+
     // +govalid:cel=value >= this.Age
     RetirementAge int
 }
 ```
 
 ### Collection Support
-Validate maps, channels, slices, and arrays:
+Validate slices, arrays, maps, and channels with size constraints:
 
 ```go
-// +govalid:maxitems=10
-type UserList struct {
-    Users    []User           // slice support
-    UserMap  map[string]User  // map support  
-    UserChan chan User        // channel support
+type UserData struct {
+    // +govalid:maxitems=10
+    // +govalid:minitems=1
+    Users []User
+
+    // +govalid:maxitems=100
+    UserMap map[string]User
+
+    // +govalid:unique
+    Tags []string
+}
+```
+
+### Nested Struct Validation with Dive
+Validate nested structs in collections:
+
+```go
+type Address struct {
+    // +govalid:required
+    Street string
+
+    // +govalid:required
+    City string
+}
+
+type Person struct {
+    // +govalid:required
+    Name string
+
+    // +govalid:dive
+    Addresses []Address  // Validates each Address in the slice
+}
+```
+
+### Conditional Validation
+Fields can be required or excluded based on other field values:
+
+```go
+type Order struct {
+    PaymentMethod string
+
+    // Required only if PaymentMethod is "card"
+    // +govalid:required_if=PaymentMethod card
+    CardNumber string
+
+    // Excluded if PaymentMethod is "cash"
+    // +govalid:excluded_if=PaymentMethod cash
+    OnlineTransactionID string
 }
 ```
 
@@ -314,9 +375,9 @@ For a complete reference of all supported markers, see [MARKERS.md](MARKERS.md).
 
 **Advanced:**
 - `cel` - Common Expression Language support for complex expressions
-- `date` - Date format validation
-- Struct-level markers
-- Cross-field validation
+- `date` - Date format validation (dd/mm/yy)
+- `dive` - Validate nested structs in collections
+- Cross-field validation with conditional validators
 
 </details>
 
@@ -336,6 +397,16 @@ govalid consistently outperforms reflection-based validators by **5x to 44x**:
 *All with **0 allocations** vs competitors' 0-5 allocations*
 
 </div>
+
+### 🔥 Dive Performance Optimization
+
+The `dive` directive for nested collection validation is optimized to consolidate multiple validators into a single loop:
+
+- **Before:** O(n × m) - separate loops for each validator
+- **After:** O(n) - single consolidated loop
+- **Result:** Up to **5x faster** for collections with multiple validators
+
+Example: 1,000 elements with 5 validators = 5,000 iterations → 1,000 iterations
 
 [📊 View Complete Benchmarks](test/benchmark/README.md)
 
