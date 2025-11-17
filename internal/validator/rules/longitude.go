@@ -9,8 +9,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type longitudeValidator struct {
@@ -82,7 +82,7 @@ func (v *longitudeValidator) ErrVariable() string {
 }
 
 func (v *longitudeValidator) Imports() []string {
-	return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+	return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 
 // ValidateLongitude creates a new longitudeValidator for string types.

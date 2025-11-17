@@ -7,8 +7,8 @@ description: "High-performance, type-safe validation library for Go with zero al
 
 **High-performance, type-safe validation library for Go with zero allocations**
 
-[![GitHub](https://img.shields.io/badge/GitHub-sivchari/govalid-blue?logo=github)](https://github.com/sivchari/govalid)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sivchari/govalid)](https://goreportcard.com/report/github.com/sivchari/govalid)
+[![GitHub](https://img.shields.io/badge/GitHub-sivchari/govalid-blue?logo=github)](https://github.com/templatedop/govalid)
+[![Go Report Card](https://goreportcard.com/badge/github.com/templatedop/govalid)](https://goreportcard.com/report/github.com/templatedop/govalid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
@@ -29,7 +29,7 @@ govalid is a Go package designed to generate type-safe validation code for struc
 ### Installation
 
 ```bash
-go install github.com/sivchari/govalid/cmd/govalid@latest
+go install github.com/templatedop/govalid/cmd/govalid@latest
 ```
 
 ### Basic Usage
@@ -121,7 +121,7 @@ func main() {
 - **Sub-3ns execution** for simple validators (Required, GT, LT)
 - **Extended type support** including maps, channels, and enums
 
-📊 **[View detailed benchmark results →](https://github.com/sivchari/govalid/blob/main/test/benchmark/README.md)**
+📊 **[View detailed benchmark results →](https://github.com/templatedop/govalid/blob/main/test/benchmark/README.md)**
 
 ## Supported Validators
 
@@ -167,4 +167,4 @@ func main() {
 
 Ready to make your Go validation blazingly fast? Check out our [Getting Started](/getting-started/) guide or browse the [available validators](/validators/).
 
-[Get Started →](/getting-started/) [View on GitHub →](https://github.com/sivchari/govalid)
+[Get Started →](/getting-started/) [View on GitHub →](https://github.com/templatedop/govalid)

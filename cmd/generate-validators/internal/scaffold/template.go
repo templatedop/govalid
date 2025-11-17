@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/sivchari/govalid/cmd/generate-validators/templates"
+	"github.com/templatedop/govalid/cmd/generate-validators/templates"
 )
 
 // generateFromTemplate generates a file from a template string and data.

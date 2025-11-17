@@ -4,8 +4,8 @@ package govalid
 import (
 	"log"
 
-	"github.com/sivchari/govalid/internal/validator/registry"
-	"github.com/sivchari/govalid/internal/validator/registry/initializers"
+	"github.com/templatedop/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator/registry/initializers"
 )
 
 func init() {

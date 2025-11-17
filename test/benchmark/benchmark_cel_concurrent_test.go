@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 // BenchmarkGoValidCELConcurrent tests CEL performance under concurrent load

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net"
 
-	"github.com/sivchari/govalid"
-	govaliderrors "github.com/sivchari/govalid/validation/errors"
+	"github.com/templatedop/govalid"
+	govaliderrors "github.com/templatedop/govalid/validation/errors"
 )
 
 var (

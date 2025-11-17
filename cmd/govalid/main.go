@@ -8,10 +8,10 @@ import (
 
 	"github.com/gostaticanalysis/codegen/singlegenerator"
 
-	govalid_pkg "github.com/sivchari/govalid"
-	"github.com/sivchari/govalid/internal/analyzers/govalid"
-	"github.com/sivchari/govalid/internal/analyzers/markers"
-	"github.com/sivchari/govalid/internal/analyzers/registry"
+	govalid_pkg "github.com/templatedop/govalid"
+	"github.com/templatedop/govalid/internal/analyzers/govalid"
+	"github.com/templatedop/govalid/internal/analyzers/markers"
+	"github.com/templatedop/govalid/internal/analyzers/registry"
 )
 
 func main() {

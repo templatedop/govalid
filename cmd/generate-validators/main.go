@@ -10,8 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/sivchari/govalid/cmd/generate-validators/internal/generate"
-	"github.com/sivchari/govalid/cmd/generate-validators/internal/scaffold"
+	"github.com/templatedop/govalid/cmd/generate-validators/internal/generate"
+	"github.com/templatedop/govalid/cmd/generate-validators/internal/scaffold"
 )
 
 // Embed templates

@@ -50,7 +50,7 @@ homebrew_casks:
       owner: sivchari
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    homepage: https://github.com/sivchari/govalid
+    homepage: https://github.com/templatedop/govalid
     description: "A Go code generator for validation functions"
     license: MIT
     binaries: [govalid]

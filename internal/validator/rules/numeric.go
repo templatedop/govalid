@@ -9,8 +9,8 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
-	"github.com/sivchari/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator/registry"
 )
 
 type numericValidator struct {
@@ -81,7 +81,7 @@ func (m *numericValidator) ErrVariable() string {
 
 func (m *numericValidator) Imports() []string {
 	return []string{
-		"github.com/sivchari/govalid/validation/validationhelper",
+		"github.com/templatedop/govalid/validation/validationhelper",
 	}
 }
 

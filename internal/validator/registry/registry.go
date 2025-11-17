@@ -7,7 +7,7 @@ import (
 
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator"
 )
 
 // ValidatorInitializer is an interface for initializing validators.

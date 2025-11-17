@@ -10,7 +10,7 @@ import (
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/ast/inspector"
 
-	govaliderrors "github.com/sivchari/govalid/internal/errors"
+	govaliderrors "github.com/templatedop/govalid/internal/errors"
 )
 
 const (

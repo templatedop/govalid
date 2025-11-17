@@ -3,7 +3,7 @@ package benchmark
 import (
 	"testing"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 // BenchmarkGoValidCELBasic tests basic CEL expressions (new implementation)

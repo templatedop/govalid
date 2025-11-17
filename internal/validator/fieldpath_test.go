@@ -3,7 +3,7 @@ package validator_test
 import (
 	"testing"
 
-	"github.com/sivchari/govalid/internal/validator"
+	"github.com/templatedop/govalid/internal/validator"
 )
 
 func TestNewFieldPath(t *testing.T) {

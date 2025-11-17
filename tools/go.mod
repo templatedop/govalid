@@ -1,4 +1,4 @@
-module github.com/sivchari/govalid/tools
+module github.com/templatedop/govalid/tools
 
 go 1.24
 

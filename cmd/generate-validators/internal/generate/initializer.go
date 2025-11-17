@@ -9,7 +9,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/sivchari/govalid/cmd/generate-validators/templates"
+	"github.com/templatedop/govalid/cmd/generate-validators/templates"
 )
 
 // generateInitializers generates individual initializer files for each validator.

@@ -3,7 +3,7 @@ package unit
 import (
 	"testing"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestAlphaValidation(t *testing.T) {

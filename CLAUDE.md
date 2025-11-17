@@ -232,7 +232,7 @@ func (v *{validator}Validator) Validate() string {
 }
 
 func (v *{validator}Validator) Imports() []string {
-    return []string{"github.com/sivchari/govalid/validation/validationhelper"}
+    return []string{"github.com/templatedop/govalid/validation/validationhelper"}
 }
 
 // No need for GeneratorMemory management - external function handles it

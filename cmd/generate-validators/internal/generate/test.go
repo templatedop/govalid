@@ -11,7 +11,7 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"github.com/sivchari/govalid/cmd/generate-validators/templates"
+	"github.com/templatedop/govalid/cmd/generate-validators/templates"
 )
 
 // TestInfo contains information needed to generate test files.

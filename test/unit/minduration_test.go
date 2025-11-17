@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sivchari/govalid/test"
+	"github.com/templatedop/govalid/test"
 )
 
 func TestMinDurationValidation(t *testing.T) {

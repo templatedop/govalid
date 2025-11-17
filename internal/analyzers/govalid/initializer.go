@@ -3,8 +3,8 @@ package govalid
 import (
 	"github.com/gostaticanalysis/codegen"
 
-	"github.com/sivchari/govalid/internal/analyzers/registry"
-	"github.com/sivchari/govalid/internal/config"
+	"github.com/templatedop/govalid/internal/analyzers/registry"
+	"github.com/templatedop/govalid/internal/config"
 )
 
 // Initializer returns a new instance of the initializer for the govalid analyzer.

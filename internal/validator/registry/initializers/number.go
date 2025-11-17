@@ -2,9 +2,9 @@
 package initializers
 
 import (
-	"github.com/sivchari/govalid/internal/markers"
-	"github.com/sivchari/govalid/internal/validator/registry"
-	"github.com/sivchari/govalid/internal/validator/rules"
+	"github.com/templatedop/govalid/internal/markers"
+	"github.com/templatedop/govalid/internal/validator/registry"
+	"github.com/templatedop/govalid/internal/validator/rules"
 )
 
 // NumberInitializer implements ValidatorInitializer for the number validator.
