@@ -107,8 +107,9 @@ type Person struct {
 Both approaches work identically. Struct tags are recommended for better integration with existing Go validation libraries.
 
 ### 2. Generate Validation Code
+go to root of project
 ```bash
-govalid generate
+govalid .
 ```
 
 This generates validation code like:
