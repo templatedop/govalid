@@ -83,15 +83,28 @@ govalid -h
 ## 🎯 Quick Start
 
 ### 1. Define Your Struct
+
+govalid supports two ways to define validation rules:
+
+#### Using Struct Tags (Recommended)
 ```go
-// Add validation markers above your struct
-// +govalid:required
 type Person struct {
+    Name  string `json:"name" validate:"required"`
+    Email string `json:"email" validate:"email"`
+}
+```
+
+#### Using Comment Markers (Legacy)
+```go
+type Person struct {
+    // +govalid:required
     Name  string `json:"name"`
     // +govalid:email
     Email string `json:"email"`
 }
 ```
+
+Both approaches work identically. Struct tags are recommended for better integration with existing Go validation libraries.
 
 ### 2. Generate Validation Code
 ```bash
@@ -226,7 +239,14 @@ func main() {
 Apply validation rules to entire structs:
 
 ```go
-// All fields will be validated as required
+// Using struct tags
+type Person struct {
+    Name  string `validate:"required"`
+    Email string `validate:"required"`
+    Age   int    `validate:"required"`
+}
+
+// Or using comment markers (legacy)
 // +govalid:required
 type Person struct {
     Name  string
@@ -239,6 +259,13 @@ type Person struct {
 Use Common Expression Language for complex validation:
 
 ```go
+// Using struct tags
+type User struct {
+    Age           int `validate:"cel=value >= 18 && value <= 120"`
+    RetirementAge int `validate:"cel=value >= this.Age"`
+}
+
+// Or using comment markers (legacy)
 type User struct {
     // +govalid:cel=value >= 18 && value <= 120
     Age int
@@ -251,10 +278,18 @@ type User struct {
 Validate maps, channels, slices, and arrays:
 
 ```go
+// Using struct tags
+type UserList struct {
+    Users    []User          `validate:"max=10"`  // slice support
+    UserMap  map[string]User `validate:"max=10"`  // map support
+    UserChan chan User       `validate:"max=10"`  // channel support
+}
+
+// Or using comment markers (legacy)
 // +govalid:maxitems=10
 type UserList struct {
     Users    []User           // slice support
-    UserMap  map[string]User  // map support  
+    UserMap  map[string]User  // map support
     UserChan chan User        // channel support
 }
 ```

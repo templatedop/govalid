@@ -7,7 +7,7 @@ description: "High-performance, type-safe validation library for Go with zero al
 
 **High-performance, type-safe validation library for Go with zero allocations**
 
-[![GitHub](https://img.shields.io/badge/GitHub-sivchari/govalid-blue?logo=github)](https://github.com/templatedop/govalid)
+[![GitHub](https://img.shields.io/badge/GitHub-templatedop/govalid-blue?logo=github)](https://github.com/templatedop/govalid)
 [![Go Report Card](https://goreportcard.com/badge/github.com/templatedop/govalid)](https://goreportcard.com/report/github.com/templatedop/govalid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -34,21 +34,32 @@ go install github.com/templatedop/govalid/cmd/govalid@latest
 
 ### Basic Usage
 
-1. **Define your struct with markers:**
+1. **Define your struct with validation tags:**
+
+govalid supports both struct tags (recommended) and comment markers (legacy):
 
 ```go
 package main
 
+// Using struct tags (recommended)
 type User struct {
+    Name  string `json:"name" validate:"required"`
+    Email string `json:"email" validate:"email"`
+    Age   int    `json:"age" validate:"gte=18"`
+    Bio   string `json:"bio" validate:"max=100"`
+}
+
+// Or using comment markers (legacy)
+type UserLegacy struct {
     // +govalid:required
     Name string `json:"name"`
-    
+
     // +govalid:email
     Email string `json:"email"`
-    
+
     // +govalid:gte=18
     Age int `json:"age"`
-    
+
     // +govalid:maxlength=100
     Bio string `json:"bio"`
 }
@@ -126,25 +137,25 @@ func main() {
 ## Supported Validators
 
 ### String Validators
-- `govalid:required` - Required field validation
-- `govalid:minlength=N` - Minimum string length (Unicode-aware)
-- `govalid:maxlength=N` - Maximum string length (Unicode-aware)
-- `govalid:email` - HTML5-compliant email validation
-- `govalid:url` - HTTP/HTTPS URL validation
-- `govalid:uuid` - RFC 4122 UUID validation
+- `validate:"required"` or `govalid:required` - Required field validation
+- `validate:"min=N"` or `govalid:minlength=N` - Minimum string length (Unicode-aware)
+- `validate:"max=N"` or `govalid:maxlength=N` - Maximum string length (Unicode-aware)
+- `validate:"email"` or `govalid:email` - HTML5-compliant email validation
+- `validate:"url"` or `govalid:url` - HTTP/HTTPS URL validation
+- `validate:"uuid"` or `govalid:uuid` - RFC 4122 UUID validation
 
 ### Numeric Validators
-- `govalid:gt=N` - Greater than validation
-- `govalid:gte=N` - Greater than or equal validation
-- `govalid:lt=N` - Less than validation
-- `govalid:lte=N` - Less than or equal validation
+- `validate:"gt=N"` or `govalid:gt=N` - Greater than validation
+- `validate:"gte=N"` or `govalid:gte=N` - Greater than or equal validation
+- `validate:"lt=N"` or `govalid:lt=N` - Less than validation
+- `validate:"lte=N"` or `govalid:lte=N` - Less than or equal validation
 
 ### Collection Validators
-- `govalid:minitems=N` - Minimum collection size
-- `govalid:maxitems=N` - Maximum collection size
+- `validate:"min=N"` or `govalid:minitems=N` - Minimum collection size
+- `validate:"max=N"` or `govalid:maxitems=N` - Maximum collection size
 
 ### General Validators
-- `govalid:enum=val1,val2,val3` - Enum validation
+- `validate:"oneof=val1 val2 val3"` or `govalid:enum=val1,val2,val3` - Enum validation
 
 ## Why govalid?
 

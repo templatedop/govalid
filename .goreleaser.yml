@@ -47,7 +47,7 @@ release:
 homebrew_casks:
   - name: govalid
     repository:
-      owner: sivchari
+      owner: templatedop
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: https://github.com/templatedop/govalid
