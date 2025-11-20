@@ -35,6 +35,9 @@ func (e *excludesallValidator) Validate() string {
 func (e *excludesallValidator) FieldName() string {
 	return e.field.Names[0].Name
 }
+func (e *excludesallValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(e.field)
+}
 
 func (e *excludesallValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(e.structName, e.parentPath, e.FieldName())
@@ -58,7 +61,7 @@ func (e *excludesallValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains any of the excluded characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not contain any of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must not contain any of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludesallValidation", e.structName, e.FieldName())
@@ -67,8 +70,9 @@ func (e *excludesallValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", e.JSONFieldName(),
 		"[@FIELD]", e.FieldName(),
-		"[@PATH]", e.FieldPath().String(),
+		"[@PATH]", e.JSONFieldName(),
 		"[@CHARS]", e.chars,
 		"[@TYPE]", e.ruleName,
 	)
@@ -85,7 +89,7 @@ func (e *excludesallValidator) ErrVariable() string {
 }
 
 func (e *excludesallValidator) Imports() []string {
-	return []string{"strings"}
+	return []string{}
 }
 
 // ValidateExcludesall creates a new excludesallValidator for string types.

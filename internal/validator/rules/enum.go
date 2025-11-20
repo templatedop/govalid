@@ -51,6 +51,9 @@ func (e *enumValidator) Validate() string {
 func (e *enumValidator) FieldName() string {
 	return e.field.Names[0].Name
 }
+func (e *enumValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(e.field)
+}
 
 func (e *enumValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(e.structName, e.parentPath, e.FieldName())
@@ -76,7 +79,7 @@ func (e *enumValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the value is not in the allowed enum values [@ENUM_LIST].
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be one of [@ENUM_LIST]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be one of [@ENUM_LIST]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sEnumValidation", e.structName, e.FieldName())
@@ -85,8 +88,9 @@ func (e *enumValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", e.JSONFieldName(),
 		"[@FIELD]", e.FieldName(),
-		"[@PATH]", e.FieldPath().String(),
+		"[@PATH]", e.JSONFieldName(),
 		"[@ENUM_LIST]", enumList,
 		"[@TYPE]", e.ruleName,
 	)

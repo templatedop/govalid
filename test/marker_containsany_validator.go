@@ -14,7 +14,7 @@ var (
 	ErrNilContainsAny = errors.New("input ContainsAny is nil")
 
 	// ErrContainsAnyPasswordContainsanyValidation is the error returned when the field does not contain any of the specified characters.
-	ErrContainsAnyPasswordContainsanyValidation = govaliderrors.ValidationError{Reason: "field Password must contain at least one of these characters: !@#$", Path: "ContainsAny.Password", Type: "containsany"}
+	ErrContainsAnyPasswordContainsanyValidation = govaliderrors.ValidationError{Reason: "password must contain at least one of these characters: !@#$", Path: "password", Type: "containsany"}
 )
 
 func ValidateContainsAny(t *ContainsAny) error {

@@ -34,6 +34,9 @@ func (m *maxLengthValidator) Validate() string {
 func (m *maxLengthValidator) FieldName() string {
 	return m.field.Names[0].Name
 }
+func (m *maxLengthValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(m.field)
+}
 
 func (m *maxLengthValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(m.structName, m.parentPath, m.FieldName())
@@ -57,7 +60,7 @@ func (m *maxLengthValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the length of the field exceeds the maximum of [@VALUE].
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must have a maximum length of [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must have a maximum length of [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMaxLengthValidation", m.structName, m.FieldName())
@@ -66,8 +69,9 @@ func (m *maxLengthValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", m.JSONFieldName(),
 		"[@FIELD]", m.FieldName(),
-		"[@PATH]", m.FieldPath().String(),
+		"[@PATH]", m.JSONFieldName(),
 		"[@VALUE]", m.maxLengthValue,
 		"[@TYPE]", m.ruleName,
 	)
@@ -84,7 +88,7 @@ func (m *maxLengthValidator) ErrVariable() string {
 }
 
 func (m *maxLengthValidator) Imports() []string {
-	return []string{"unicode/utf8"}
+	return []string{}
 }
 
 // ValidateMaxLength creates a new maxLengthValidator if the field type is string and the maxlength marker is present.

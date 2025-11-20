@@ -50,6 +50,9 @@ func (c *celValidator) Validate() string {
 func (c *celValidator) FieldName() string {
 	return c.field.Names[0].Name
 }
+func (c *celValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(c.field)
+}
 
 func (c *celValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(c.structName, c.parentPath, c.FieldName())
@@ -73,7 +76,7 @@ func (c *celValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the CEL expression evaluation fails.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] failed CEL validation: [@EXPRESSION]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] failed CEL validation: [@EXPRESSION]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sCELValidation", c.structName, c.FieldName())
@@ -82,8 +85,9 @@ func (c *celValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", c.JSONFieldName(),
 		"[@FIELD]", c.FieldName(),
-		"[@PATH]", c.FieldPath().String(),
+		"[@PATH]", c.JSONFieldName(),
 		"[@EXPRESSION]", c.expression,
 		"[@TYPE]", c.ruleName,
 	)

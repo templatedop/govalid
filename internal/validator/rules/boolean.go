@@ -34,6 +34,9 @@ func (b *booleanValidator) Validate() string {
 func (b *booleanValidator) FieldName() string {
 	return b.field.Names[0].Name
 }
+func (b *booleanValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(b.field)
+}
 
 func (b *booleanValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(b.structName, b.parentPath, b.FieldName())
@@ -57,7 +60,7 @@ func (b *booleanValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid boolean string.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid boolean (true, false, 1, 0, yes, no, on, off)", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid boolean (true, false, 1, 0, yes, no, on, off)", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sBooleanValidation", b.structName, b.FieldName())
@@ -66,8 +69,9 @@ func (b *booleanValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", b.JSONFieldName(),
 		"[@FIELD]", b.FieldName(),
-		"[@PATH]", b.FieldPath().String(),
+		"[@PATH]", b.JSONFieldName(),
 		"[@TYPE]", b.ruleName,
 	)
 

@@ -13,10 +13,10 @@ var (
 	ErrNilEq = errors.New("input Eq is nil")
 
 	// ErrEqStatusEqValidation is the error returned when the field does not equal \"active\".
-	ErrEqStatusEqValidation = govaliderrors.ValidationError{Reason: "field Status must equal \"active\"", Path: "Eq.Status", Type: "eq"}
+	ErrEqStatusEqValidation = govaliderrors.ValidationError{Reason: "status must equal \"active\"", Path: "status", Type: "eq"}
 
 	// ErrEqCountEqValidation is the error returned when the field does not equal 100.
-	ErrEqCountEqValidation = govaliderrors.ValidationError{Reason: "field Count must equal 100", Path: "Eq.Count", Type: "eq"}
+	ErrEqCountEqValidation = govaliderrors.ValidationError{Reason: "count must equal 100", Path: "count", Type: "eq"}
 )
 
 func ValidateEq(t *Eq) error {

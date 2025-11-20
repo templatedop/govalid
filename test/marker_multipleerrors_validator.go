@@ -13,11 +13,11 @@ var (
 	// ErrNilMultipleErrors is returned when the MultipleErrors is nil.
 	ErrNilMultipleErrors = errors.New("input MultipleErrors is nil")
 
-	// ErrMultipleErrorsURLRequiredValidation is returned when the URL is required but not provided.
-	ErrMultipleErrorsURLRequiredValidation = govaliderrors.ValidationError{Reason: "field URL is required", Path: "MultipleErrors.URL", Type: "required"}
+	// ErrMultipleErrorsURLRequiredValidation is returned when the url is required but not provided.
+	ErrMultipleErrorsURLRequiredValidation = govaliderrors.ValidationError{Reason: "url is a required field", Path: "url", Type: "required"}
 
 	// ErrMultipleErrorsTooLongMaxLengthValidation is the error returned when the length of the field exceeds the maximum of 1.
-	ErrMultipleErrorsTooLongMaxLengthValidation = govaliderrors.ValidationError{Reason: "field TooLong must have a maximum length of 1", Path: "MultipleErrors.TooLong", Type: "maxlength"}
+	ErrMultipleErrorsTooLongMaxLengthValidation = govaliderrors.ValidationError{Reason: "too_long must have a maximum length of 1", Path: "too_long", Type: "maxlength"}
 )
 
 func ValidateMultipleErrors(t *MultipleErrors) error {

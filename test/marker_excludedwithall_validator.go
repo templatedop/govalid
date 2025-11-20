@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedWithAll = errors.New("input ExcludedWithAll is nil")
 
 	// ErrExcludedWithAllEditButtonExcludedWithAllValidation is the error returned when the field must be absent because all other fields are present.
-	ErrExcludedWithAllEditButtonExcludedWithAllValidation = govaliderrors.ValidationError{Reason: "field EditButton must be absent when all of ReadOnly, Archived are present", Path: "ExcludedWithAll.EditButton", Type: "excluded_with_all"}
+	ErrExcludedWithAllEditButtonExcludedWithAllValidation = govaliderrors.ValidationError{Reason: "edit_button must be absent when all of ReadOnly, Archived are present", Path: "edit_button", Type: "excluded_with_all"}
 )
 
 func ValidateExcludedWithAll(t *ExcludedWithAll) error {

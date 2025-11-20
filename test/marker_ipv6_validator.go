@@ -14,7 +14,7 @@ var (
 	ErrNilIPV6 = errors.New("input IPV6 is nil")
 
 	// ErrIPV6IPIpv6Validation is returned when the IP fails ipv6 validation.
-	ErrIPV6IPIpv6Validation = govaliderrors.ValidationError{Reason: "field IP failed ipv6 validation", Path: "IPV6.IP", Type: "ipv6"}
+	ErrIPV6IPIpv6Validation = govaliderrors.ValidationError{Reason: "ip failed ipv6 validation", Path: "ip", Type: "ipv6"}
 )
 
 func ValidateIPV6(t *IPV6) error {

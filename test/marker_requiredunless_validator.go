@@ -13,7 +13,7 @@ var (
 	ErrNilRequiredUnless = errors.New("input RequiredUnless is nil")
 
 	// ErrRequiredUnlessActiveFieldRequiredUnlessValidation is the error returned when the field is required unless another field has a specific value.
-	ErrRequiredUnlessActiveFieldRequiredUnlessValidation = govaliderrors.ValidationError{Reason: "field ActiveField is required unless Status equals \"inactive\"", Path: "RequiredUnless.ActiveField", Type: "required_unless"}
+	ErrRequiredUnlessActiveFieldRequiredUnlessValidation = govaliderrors.ValidationError{Reason: "active_field is required unless Status equals \"inactive\"", Path: "active_field", Type: "required_unless"}
 )
 
 func ValidateRequiredUnless(t *RequiredUnless) error {

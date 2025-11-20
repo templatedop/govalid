@@ -2,7 +2,6 @@
 package errors
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -49,10 +48,7 @@ func (e ValidationErrors) Is(target error) bool {
 // Error implements the error interface for ValidationError.
 // It returns a string representation of a single validation error.
 func (e ValidationError) Error() string {
-	return fmt.Errorf(
-		"field %s with value %v has failed validation %s because %s",
-		e.Path, e.Value, e.Type, e.Reason,
-	).Error()
+	return e.Reason
 }
 
 // Is implements error matching for ValidationError.

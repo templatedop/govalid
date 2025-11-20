@@ -34,6 +34,9 @@ func (u *uuidValidator) Validate() string {
 func (u *uuidValidator) FieldName() string {
 	return u.field.Names[0].Name
 }
+func (u *uuidValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(u.field)
+}
 
 func (u *uuidValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(u.structName, u.parentPath, u.FieldName())
@@ -124,7 +127,7 @@ func (u *uuidValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid UUID.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid UUID", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid UUID", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sUUIDValidation", u.structName, u.FieldName())
@@ -133,8 +136,9 @@ func (u *uuidValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", u.JSONFieldName(),
 		"[@FIELD]", u.FieldName(),
-		"[@PATH]", u.FieldPath().String(),
+		"[@PATH]", u.JSONFieldName(),
 		"[@TYPE]", u.ruleName,
 	)
 

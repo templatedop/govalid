@@ -13,10 +13,10 @@ var (
 	ErrNilIsDefault = errors.New("input IsDefault is nil")
 
 	// ErrIsDefaultOptionalFieldIsdefaultValidation is the error returned when the field is not at its default/zero value.
-	ErrIsDefaultOptionalFieldIsdefaultValidation = govaliderrors.ValidationError{Reason: "field OptionalField must be at its default value", Path: "IsDefault.OptionalField", Type: "isdefault"}
+	ErrIsDefaultOptionalFieldIsdefaultValidation = govaliderrors.ValidationError{Reason: "optional_field must be at its default value", Path: "optional_field", Type: "isdefault"}
 
 	// ErrIsDefaultOptionalNumberIsdefaultValidation is the error returned when the field is not at its default/zero value.
-	ErrIsDefaultOptionalNumberIsdefaultValidation = govaliderrors.ValidationError{Reason: "field OptionalNumber must be at its default value", Path: "IsDefault.OptionalNumber", Type: "isdefault"}
+	ErrIsDefaultOptionalNumberIsdefaultValidation = govaliderrors.ValidationError{Reason: "optional_number must be at its default value", Path: "optional_number", Type: "isdefault"}
 )
 
 func ValidateIsDefault(t *IsDefault) error {

@@ -54,7 +54,7 @@ var (
 		return true
 	}
 	// ErrUUIDUUIDUUIDValidation is the error returned when the field is not a valid UUID.
-	ErrUUIDUUIDUUIDValidation = govaliderrors.ValidationError{Reason: "field UUID must be a valid UUID", Path: "UUID.UUID", Type: "uuid"}
+	ErrUUIDUUIDUUIDValidation = govaliderrors.ValidationError{Reason: "uuid must be a valid UUID", Path: "uuid", Type: "uuid"}
 )
 
 func ValidateUUID(t *UUID) error {

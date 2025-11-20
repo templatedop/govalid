@@ -34,6 +34,9 @@ func (n *neValidator) Validate() string {
 func (n *neValidator) FieldName() string {
 	return n.field.Names[0].Name
 }
+func (n *neValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(n.field)
+}
 
 func (n *neValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(n.structName, n.parentPath, n.FieldName())
@@ -57,7 +60,7 @@ func (n *neValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field equals [@VALUE] but should not.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not equal [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must not equal [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sNeValidation", n.structName, n.FieldName())
@@ -69,8 +72,9 @@ func (n *neValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", n.JSONFieldName(),
 		"[@FIELD]", n.FieldName(),
-		"[@PATH]", n.FieldPath().String(),
+		"[@PATH]", n.JSONFieldName(),
 		"[@VALUE]", escapedValue,
 		"[@TYPE]", n.ruleName,
 	)

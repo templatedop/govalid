@@ -34,6 +34,10 @@ func (d *dateValidator) Validate() string {
 
 func (d *dateValidator) FieldName() string { return d.field.Names[0].Name }
 
+func (d *dateValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(d.field)
+}
+
 func (d *dateValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(d.structName, d.parentPath, d.FieldName())
 }
@@ -47,12 +51,13 @@ func (d *dateValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid date (dd/mm/yy).
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid date (dd/mm/yy)", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid date (dd/mm/yy)", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", d.ErrVariable(),
+		"[@JSONFIELD]", d.JSONFieldName(),
 		"[@FIELD]", d.FieldName(),
-		"[@PATH]", d.FieldPath().String(),
+		"[@PATH]", d.JSONFieldName(),
 		"[@TYPE]", d.ruleName,
 	)
 	return replacer.Replace(errTemplate)

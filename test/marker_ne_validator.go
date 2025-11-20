@@ -13,10 +13,10 @@ var (
 	ErrNilNe = errors.New("input Ne is nil")
 
 	// ErrNeRoleNeValidation is the error returned when the field equals \"admin\" but should not.
-	ErrNeRoleNeValidation = govaliderrors.ValidationError{Reason: "field Role must not equal \"admin\"", Path: "Ne.Role", Type: "ne"}
+	ErrNeRoleNeValidation = govaliderrors.ValidationError{Reason: "role must not equal \"admin\"", Path: "role", Type: "ne"}
 
 	// ErrNeScoreNeValidation is the error returned when the field equals 0 but should not.
-	ErrNeScoreNeValidation = govaliderrors.ValidationError{Reason: "field Score must not equal 0", Path: "Ne.Score", Type: "ne"}
+	ErrNeScoreNeValidation = govaliderrors.ValidationError{Reason: "score must not equal 0", Path: "score", Type: "ne"}
 )
 
 func ValidateNe(t *Ne) error {

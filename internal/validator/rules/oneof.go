@@ -56,6 +56,9 @@ func (o *oneofValidator) Validate() string {
 func (o *oneofValidator) FieldName() string {
 	return o.field.Names[0].Name
 }
+func (o *oneofValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(o.field)
+}
 
 func (o *oneofValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(o.structName, o.parentPath, o.FieldName())
@@ -79,7 +82,7 @@ func (o *oneofValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not one of the allowed values.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be one of [@VALUES]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be one of [@VALUES]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sOneofValidation", o.structName, o.FieldName())
@@ -88,8 +91,9 @@ func (o *oneofValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", o.JSONFieldName(),
 		"[@FIELD]", o.FieldName(),
-		"[@PATH]", o.FieldPath().String(),
+		"[@PATH]", o.JSONFieldName(),
 		"[@VALUES]", o.values,
 		"[@TYPE]", o.ruleName,
 	)

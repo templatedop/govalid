@@ -13,10 +13,10 @@ var (
 	ErrNilOneOf = errors.New("input OneOf is nil")
 
 	// ErrOneOfColorOneofValidation is the error returned when the field is not one of the allowed values.
-	ErrOneOfColorOneofValidation = govaliderrors.ValidationError{Reason: "field Color must be one of red green blue", Path: "OneOf.Color", Type: "oneof"}
+	ErrOneOfColorOneofValidation = govaliderrors.ValidationError{Reason: "color must be one of red green blue", Path: "color", Type: "oneof"}
 
 	// ErrOneOfLevelOneofValidation is the error returned when the field is not one of the allowed values.
-	ErrOneOfLevelOneofValidation = govaliderrors.ValidationError{Reason: "field Level must be one of 1 2 3", Path: "OneOf.Level", Type: "oneof"}
+	ErrOneOfLevelOneofValidation = govaliderrors.ValidationError{Reason: "level must be one of 1 2 3", Path: "level", Type: "oneof"}
 )
 
 func ValidateOneOf(t *OneOf) error {

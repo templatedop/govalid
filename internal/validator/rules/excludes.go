@@ -35,6 +35,9 @@ func (e *excludesValidator) Validate() string {
 func (e *excludesValidator) FieldName() string {
 	return e.field.Names[0].Name
 }
+func (e *excludesValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(e.field)
+}
 
 func (e *excludesValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(e.structName, e.parentPath, e.FieldName())
@@ -58,7 +61,7 @@ func (e *excludesValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains the excluded substring.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not contain: [@SUBSTR]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must not contain: [@SUBSTR]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sExcludesValidation", e.structName, e.FieldName())
@@ -67,8 +70,9 @@ func (e *excludesValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", e.JSONFieldName(),
 		"[@FIELD]", e.FieldName(),
-		"[@PATH]", e.FieldPath().String(),
+		"[@PATH]", e.JSONFieldName(),
 		"[@SUBSTR]", e.substr,
 		"[@TYPE]", e.ruleName,
 	)
@@ -85,7 +89,7 @@ func (e *excludesValidator) ErrVariable() string {
 }
 
 func (e *excludesValidator) Imports() []string {
-	return []string{"strings"}
+	return []string{}
 }
 
 // ValidateExcludes creates a new excludesValidator for string types.

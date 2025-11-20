@@ -12,14 +12,14 @@ var (
 	// ErrNilRequired is returned when the Required is nil.
 	ErrNilRequired = errors.New("input Required is nil")
 
-	// ErrRequiredNameRequiredValidation is returned when the Name is required but not provided.
-	ErrRequiredNameRequiredValidation = govaliderrors.ValidationError{Reason: "field Name is required", Path: "Required.Name", Type: "required"}
+	// ErrRequiredNameRequiredValidation is returned when the name is required but not provided.
+	ErrRequiredNameRequiredValidation = govaliderrors.ValidationError{Reason: "name is a required field", Path: "name", Type: "required"}
 
-	// ErrRequiredAgeRequiredValidation is returned when the Age is required but not provided.
-	ErrRequiredAgeRequiredValidation = govaliderrors.ValidationError{Reason: "field Age is required", Path: "Required.Age", Type: "required"}
+	// ErrRequiredAgeRequiredValidation is returned when the age is required but not provided.
+	ErrRequiredAgeRequiredValidation = govaliderrors.ValidationError{Reason: "age is a required field", Path: "age", Type: "required"}
 
-	// ErrRequiredItemsRequiredValidation is returned when the Items is required but not provided.
-	ErrRequiredItemsRequiredValidation = govaliderrors.ValidationError{Reason: "field Items is required", Path: "Required.Items", Type: "required"}
+	// ErrRequiredItemsRequiredValidation is returned when the items is required but not provided.
+	ErrRequiredItemsRequiredValidation = govaliderrors.ValidationError{Reason: "items is a required field", Path: "items", Type: "required"}
 )
 
 func ValidateRequired(t *Required) error {

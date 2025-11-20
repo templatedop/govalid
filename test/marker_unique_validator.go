@@ -13,10 +13,10 @@ var (
 	ErrNilUnique = errors.New("input Unique is nil")
 
 	// ErrUniqueTagsUniqueValidation is the error returned when the field contains duplicate values.
-	ErrUniqueTagsUniqueValidation = govaliderrors.ValidationError{Reason: "field Tags must contain unique values", Path: "Unique.Tags", Type: "unique"}
+	ErrUniqueTagsUniqueValidation = govaliderrors.ValidationError{Reason: "tags must contain unique values", Path: "tags", Type: "unique"}
 
 	// ErrUniqueIDsUniqueValidation is the error returned when the field contains duplicate values.
-	ErrUniqueIDsUniqueValidation = govaliderrors.ValidationError{Reason: "field IDs must contain unique values", Path: "Unique.IDs", Type: "unique"}
+	ErrUniqueIDsUniqueValidation = govaliderrors.ValidationError{Reason: "ids must contain unique values", Path: "ids", Type: "unique"}
 )
 
 func ValidateUnique(t *Unique) error {

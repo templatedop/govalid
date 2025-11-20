@@ -35,6 +35,9 @@ func (c *containsanyValidator) Validate() string {
 func (c *containsanyValidator) FieldName() string {
 	return c.field.Names[0].Name
 }
+func (c *containsanyValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(c.field)
+}
 
 func (c *containsanyValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(c.structName, c.parentPath, c.FieldName())
@@ -58,7 +61,7 @@ func (c *containsanyValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field does not contain any of the specified characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain at least one of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must contain at least one of these characters: [@CHARS]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sContainsanyValidation", c.structName, c.FieldName())
@@ -67,8 +70,9 @@ func (c *containsanyValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", c.JSONFieldName(),
 		"[@FIELD]", c.FieldName(),
-		"[@PATH]", c.FieldPath().String(),
+		"[@PATH]", c.JSONFieldName(),
 		"[@CHARS]", c.chars,
 		"[@TYPE]", c.ruleName,
 	)
@@ -85,7 +89,7 @@ func (c *containsanyValidator) ErrVariable() string {
 }
 
 func (c *containsanyValidator) Imports() []string {
-	return []string{"strings"}
+	return []string{}
 }
 
 // ValidateContainsany creates a new containsanyValidator for string types.

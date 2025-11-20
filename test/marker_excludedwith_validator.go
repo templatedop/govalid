@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedWith = errors.New("input ExcludedWith is nil")
 
 	// ErrExcludedWithAdminPanelExcludedWithValidation is the error returned when the field must be absent because other fields are present.
-	ErrExcludedWithAdminPanelExcludedWithValidation = govaliderrors.ValidationError{Reason: "field AdminPanel must be absent when any of GuestMode are present", Path: "ExcludedWith.AdminPanel", Type: "excluded_with"}
+	ErrExcludedWithAdminPanelExcludedWithValidation = govaliderrors.ValidationError{Reason: "admin_panel must be absent when any of GuestMode are present", Path: "admin_panel", Type: "excluded_with"}
 )
 
 func ValidateExcludedWith(t *ExcludedWith) error {

@@ -14,7 +14,7 @@ var (
 	ErrNilNumber = errors.New("input Number is nil")
 
 	// ErrNumberNumericStringNumberValidation is the error returned when the field contains non-numeric characters.
-	ErrNumberNumericStringNumberValidation = govaliderrors.ValidationError{Reason: "field NumericString must contain only numbers", Path: "Number.NumericString", Type: "number"}
+	ErrNumberNumericStringNumberValidation = govaliderrors.ValidationError{Reason: "numeric_string must contain only numbers", Path: "numeric_string", Type: "number"}
 )
 
 func ValidateNumber(t *Number) error {

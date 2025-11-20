@@ -14,7 +14,7 @@ var (
 	ErrNilURI = errors.New("input URI is nil")
 
 	// ErrURIAddressURIValidation is the error returned when the field is not a URI.
-	ErrURIAddressURIValidation = govaliderrors.ValidationError{Reason: "field Address must be a URI", Path: "URI.Address", Type: "uri"}
+	ErrURIAddressURIValidation = govaliderrors.ValidationError{Reason: "address must be a URI", Path: "address", Type: "uri"}
 )
 
 func ValidateURI(t *URI) error {

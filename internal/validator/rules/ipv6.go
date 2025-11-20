@@ -32,6 +32,10 @@ func (v *ipv6Validator) FieldName() string {
 	return v.field.Names[0].Name
 }
 
+func (v *ipv6Validator) JSONFieldName() string {
+	return validator.GetJSONTagName(v.field)
+}
+
 func (v *ipv6Validator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(v.structName, v.parentPath, v.FieldName())
 }
@@ -54,7 +58,7 @@ func (v *ipv6Validator) Err() string {
 
 	const errTemplate = `
 	  // [@ERRVARIABLE] is returned when the [@FIELD] fails ipv6 validation.
-	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] failed ipv6 validation", Path: "[@PATH]", Type: "[@TYPE]"}
+	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] failed ipv6 validation", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sIpv6Validation", v.structName, v.FieldName())
@@ -63,8 +67,9 @@ func (v *ipv6Validator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", v.JSONFieldName(),
 		"[@FIELD]", v.FieldName(),
-		"[@PATH]", v.FieldPath().String(),
+		"[@PATH]", v.JSONFieldName(),
 		"[@TYPE]", v.ruleName,
 	)
 

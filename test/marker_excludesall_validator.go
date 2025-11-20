@@ -14,7 +14,7 @@ var (
 	ErrNilExcludesAll = errors.New("input ExcludesAll is nil")
 
 	// ErrExcludesAllCommentExcludesallValidation is the error returned when the field contains any of the excluded characters.
-	ErrExcludesAllCommentExcludesallValidation = govaliderrors.ValidationError{Reason: "field Comment must not contain any of these characters: <>", Path: "ExcludesAll.Comment", Type: "excludesall"}
+	ErrExcludesAllCommentExcludesallValidation = govaliderrors.ValidationError{Reason: "comment must not contain any of these characters: <>", Path: "comment", Type: "excludesall"}
 )
 
 func ValidateExcludesAll(t *ExcludesAll) error {

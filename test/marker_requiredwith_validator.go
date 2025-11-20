@@ -13,7 +13,7 @@ var (
 	ErrNilRequiredWith = errors.New("input RequiredWith is nil")
 
 	// ErrRequiredWithEmailConfirmationRequiredWithValidation is the error returned when the field is required because other fields are present.
-	ErrRequiredWithEmailConfirmationRequiredWithValidation = govaliderrors.ValidationError{Reason: "field EmailConfirmation is required when any of Email are present", Path: "RequiredWith.EmailConfirmation", Type: "required_with"}
+	ErrRequiredWithEmailConfirmationRequiredWithValidation = govaliderrors.ValidationError{Reason: "email_confirmation is required when any of Email are present", Path: "email_confirmation", Type: "required_with"}
 )
 
 func ValidateRequiredWith(t *RequiredWith) error {

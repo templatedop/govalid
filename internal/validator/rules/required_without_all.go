@@ -44,6 +44,9 @@ func (r *required_without_allValidator) Validate() string {
 func (r *required_without_allValidator) FieldName() string {
 	return r.field.Names[0].Name
 }
+func (r *required_without_allValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(r.field)
+}
 
 func (r *required_without_allValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(r.structName, r.parentPath, r.FieldName())
@@ -67,7 +70,7 @@ func (r *required_without_allValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required because all other fields are absent.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required when all of [@FIELDS] are absent", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] is required when all of [@FIELDS] are absent", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredWithoutAllValidation", r.structName, r.FieldName())
@@ -76,8 +79,9 @@ func (r *required_without_allValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", r.JSONFieldName(),
 		"[@FIELD]", r.FieldName(),
-		"[@PATH]", r.FieldPath().String(),
+		"[@PATH]", r.JSONFieldName(),
 		"[@FIELDS]", strings.Join(r.fields, ", "),
 		"[@TYPE]", r.ruleName,
 	)

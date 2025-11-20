@@ -33,6 +33,9 @@ func (v *uriValidator) Validate() string {
 func (v *uriValidator) FieldName() string {
 	return v.field.Names[0].Name
 }
+func (v *uriValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(v.field)
+}
 
 func (v *uriValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(v.structName, v.parentPath, v.FieldName())
@@ -56,7 +59,7 @@ func (v *uriValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a URI.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a URI", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a URI", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sURIValidation", v.structName, v.FieldName())
@@ -65,8 +68,9 @@ func (v *uriValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", v.JSONFieldName(),
 		"[@FIELD]", v.FieldName(),
-		"[@PATH]", v.FieldPath().String(),
+		"[@PATH]", v.JSONFieldName(),
 		"[@TYPE]", v.ruleName,
 	)
 

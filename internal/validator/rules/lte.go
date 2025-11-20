@@ -34,6 +34,9 @@ func (m *lteValidator) Validate() string {
 func (m *lteValidator) FieldName() string {
 	return m.field.Names[0].Name
 }
+func (m *lteValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(m.field)
+}
 
 func (m *lteValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(m.structName, m.parentPath, m.FieldName())
@@ -57,7 +60,7 @@ func (m *lteValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the value of the field is greater than [@VALUE].
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be less than or equal to [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be less than or equal to [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sLTEValidation", m.structName, m.FieldName())
@@ -66,8 +69,9 @@ func (m *lteValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", m.JSONFieldName(),
 		"[@FIELD]", m.FieldName(),
-		"[@PATH]", m.FieldPath().String(),
+		"[@PATH]", m.JSONFieldName(),
 		"[@VALUE]", m.lteValue,
 		"[@TYPE]", m.ruleName,
 	)

@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedWithout = errors.New("input ExcludedWithout is nil")
 
 	// ErrExcludedWithoutFreeFeatureExcludedWithoutValidation is the error returned when the field must be absent because other fields are absent.
-	ErrExcludedWithoutFreeFeatureExcludedWithoutValidation = govaliderrors.ValidationError{Reason: "field FreeFeature must be absent when any of Premium are absent", Path: "ExcludedWithout.FreeFeature", Type: "excluded_without"}
+	ErrExcludedWithoutFreeFeatureExcludedWithoutValidation = govaliderrors.ValidationError{Reason: "free_feature must be absent when any of Premium are absent", Path: "free_feature", Type: "excluded_without"}
 )
 
 func ValidateExcludedWithout(t *ExcludedWithout) error {

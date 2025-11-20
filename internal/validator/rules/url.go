@@ -33,6 +33,9 @@ func (u *urlValidator) Validate() string {
 func (u *urlValidator) FieldName() string {
 	return u.field.Names[0].Name
 }
+func (u *urlValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(u.field)
+}
 
 func (u *urlValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(u.structName, u.parentPath, u.FieldName())
@@ -56,7 +59,7 @@ func (u *urlValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid URL.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid URL", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid URL", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sURLValidation", u.structName, u.FieldName())
@@ -65,8 +68,9 @@ func (u *urlValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", u.JSONFieldName(),
 		"[@FIELD]", u.FieldName(),
-		"[@PATH]", u.FieldPath().String(),
+		"[@PATH]", u.JSONFieldName(),
 		"[@TYPE]", u.ruleName,
 	)
 

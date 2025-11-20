@@ -33,6 +33,9 @@ func (v *latitudeValidator) Validate() string {
 func (v *latitudeValidator) FieldName() string {
 	return v.field.Names[0].Name
 }
+func (v *latitudeValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(v.field)
+}
 
 func (v *latitudeValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(v.structName, v.parentPath, v.FieldName())
@@ -56,7 +59,7 @@ func (v *latitudeValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid latitude (-90 to 90).
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid latitude (-90 to 90)", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid latitude (-90 to 90)", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sLatitudeValidation", v.structName, v.FieldName())
@@ -65,8 +68,9 @@ func (v *latitudeValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", v.JSONFieldName(),
 		"[@FIELD]", v.FieldName(),
-		"[@PATH]", v.FieldPath().String(),
+		"[@PATH]", v.JSONFieldName(),
 		"[@TYPE]", v.ruleName,
 	)
 

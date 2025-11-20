@@ -34,6 +34,9 @@ func (m *maxItemsValidator) Validate() string {
 func (m *maxItemsValidator) FieldName() string {
 	return m.field.Names[0].Name
 }
+func (m *maxItemsValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(m.field)
+}
 
 func (m *maxItemsValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(m.structName, m.parentPath, m.FieldName())
@@ -57,7 +60,7 @@ func (m *maxItemsValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the length of the field exceeds the maximum of [@VALUE].
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must have a maximum of [@VALUE] items", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must have a maximum of [@VALUE] items", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMaxItemsValidation", m.structName, m.FieldName())
@@ -66,8 +69,9 @@ func (m *maxItemsValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", m.JSONFieldName(),
 		"[@FIELD]", m.FieldName(),
-		"[@PATH]", m.FieldPath().String(),
+		"[@PATH]", m.JSONFieldName(),
 		"[@VALUE]", m.maxItemsValue,
 		"[@TYPE]", m.ruleName,
 	)

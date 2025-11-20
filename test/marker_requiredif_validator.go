@@ -13,7 +13,7 @@ var (
 	ErrNilRequiredIf = errors.New("input RequiredIf is nil")
 
 	// ErrRequiredIfActiveFieldRequiredIfValidation is the error returned when the field is required due to another field's value.
-	ErrRequiredIfActiveFieldRequiredIfValidation = govaliderrors.ValidationError{Reason: "field ActiveField is required when Status equals \"active\"", Path: "RequiredIf.ActiveField", Type: "required_if"}
+	ErrRequiredIfActiveFieldRequiredIfValidation = govaliderrors.ValidationError{Reason: "active_field is required when Status equals \"active\"", Path: "active_field", Type: "required_if"}
 )
 
 func ValidateRequiredIf(t *RequiredIf) error {

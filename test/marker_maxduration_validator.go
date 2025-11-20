@@ -14,7 +14,7 @@ var (
 	ErrNilMaxDuration = errors.New("input MaxDuration is nil")
 
 	// ErrMaxDurationIntervalMaxdurationValidation is the error returned when the duration exceeds the maximum.
-	ErrMaxDurationIntervalMaxdurationValidation = govaliderrors.ValidationError{Reason: "field Interval must not exceed 24h", Path: "MaxDuration.Interval", Type: "maxduration"}
+	ErrMaxDurationIntervalMaxdurationValidation = govaliderrors.ValidationError{Reason: "interval must not exceed 24h", Path: "interval", Type: "maxduration"}
 )
 
 func ValidateMaxDuration(t *MaxDuration) error {

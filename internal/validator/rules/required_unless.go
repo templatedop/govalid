@@ -40,6 +40,9 @@ func (r *required_unlessValidator) Validate() string {
 func (r *required_unlessValidator) FieldName() string {
 	return r.field.Names[0].Name
 }
+func (r *required_unlessValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(r.field)
+}
 
 func (r *required_unlessValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(r.structName, r.parentPath, r.FieldName())
@@ -63,7 +66,7 @@ func (r *required_unlessValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required unless another field has a specific value.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required unless [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] is required unless [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredUnlessValidation", r.structName, r.FieldName())
@@ -75,8 +78,9 @@ func (r *required_unlessValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", r.JSONFieldName(),
 		"[@FIELD]", r.FieldName(),
-		"[@PATH]", r.FieldPath().String(),
+		"[@PATH]", r.JSONFieldName(),
 		"[@OTHER]", r.otherField,
 		"[@VALUE]", escapedValue,
 		"[@TYPE]", r.ruleName,

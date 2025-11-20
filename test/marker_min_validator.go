@@ -13,7 +13,7 @@ var (
 	ErrNilMin = errors.New("input Min is nil")
 
 	// ErrMinAgeMinValidation is the error returned when the value of the field is less than the minimum of 10.
-	ErrMinAgeMinValidation = govaliderrors.ValidationError{Reason: "field Age must be greater than or equal to 10", Path: "Min.Age", Type: "min"}
+	ErrMinAgeMinValidation = govaliderrors.ValidationError{Reason: "age must be greater than or equal to 10", Path: "age", Type: "min"}
 )
 
 func ValidateMin(t *Min) error {

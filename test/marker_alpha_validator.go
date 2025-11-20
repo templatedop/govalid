@@ -14,13 +14,13 @@ var (
 	ErrNilAlpha = errors.New("input Alpha is nil")
 
 	// ErrAlphaFirstNameAlphaValidation is the error returned when field FirstName is not alphabetic.
-	ErrAlphaFirstNameAlphaValidation = govaliderrors.ValidationError{Reason: "field FirstName must be alphabetic", Path: "Alpha.FirstName", Type: "alpha"}
+	ErrAlphaFirstNameAlphaValidation = govaliderrors.ValidationError{Reason: "first_name must be alphabetic", Path: "first_name", Type: "alpha"}
 
 	// ErrAlphaLastNameAlphaValidation is the error returned when field LastName is not alphabetic.
-	ErrAlphaLastNameAlphaValidation = govaliderrors.ValidationError{Reason: "field LastName must be alphabetic", Path: "Alpha.LastName", Type: "alpha"}
+	ErrAlphaLastNameAlphaValidation = govaliderrors.ValidationError{Reason: "last_name must be alphabetic", Path: "last_name", Type: "alpha"}
 
 	// ErrAlphaCountryCodeAlphaValidation is the error returned when field CountryCode is not alphabetic.
-	ErrAlphaCountryCodeAlphaValidation = govaliderrors.ValidationError{Reason: "field CountryCode must be alphabetic", Path: "Alpha.CountryCode", Type: "alpha"}
+	ErrAlphaCountryCodeAlphaValidation = govaliderrors.ValidationError{Reason: "country_code must be alphabetic", Path: "country_code", Type: "alpha"}
 )
 
 func ValidateAlpha(t *Alpha) error {

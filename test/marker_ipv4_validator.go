@@ -14,7 +14,7 @@ var (
 	ErrNilIPV4 = errors.New("input IPV4 is nil")
 
 	// ErrIPV4IPIpv4Validation is returned when the IP fails ipv4 validation.
-	ErrIPV4IPIpv4Validation = govaliderrors.ValidationError{Reason: "field IP failed ipv4 validation", Path: "IPV4.IP", Type: "ipv4"}
+	ErrIPV4IPIpv4Validation = govaliderrors.ValidationError{Reason: "ip failed ipv4 validation", Path: "ip", Type: "ipv4"}
 )
 
 func ValidateIPV4(t *IPV4) error {

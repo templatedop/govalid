@@ -14,7 +14,7 @@ var (
 	ErrNilExcludes = errors.New("input Excludes is nil")
 
 	// ErrExcludesUsernameExcludesValidation is the error returned when the field contains the excluded substring.
-	ErrExcludesUsernameExcludesValidation = govaliderrors.ValidationError{Reason: "field Username must not contain: admin", Path: "Excludes.Username", Type: "excludes"}
+	ErrExcludesUsernameExcludesValidation = govaliderrors.ValidationError{Reason: "username must not contain: admin", Path: "username", Type: "excludes"}
 )
 
 func ValidateExcludes(t *Excludes) error {

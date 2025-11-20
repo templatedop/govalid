@@ -42,6 +42,9 @@ func (u *uniqueValidator) Validate() string {
 func (u *uniqueValidator) FieldName() string {
 	return u.field.Names[0].Name
 }
+func (u *uniqueValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(u.field)
+}
 
 func (u *uniqueValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(u.structName, u.parentPath, u.FieldName())
@@ -65,7 +68,7 @@ func (u *uniqueValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains duplicate values.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain unique values", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must contain unique values", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sUniqueValidation", u.structName, u.FieldName())
@@ -74,8 +77,9 @@ func (u *uniqueValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", u.JSONFieldName(),
 		"[@FIELD]", u.FieldName(),
-		"[@PATH]", u.FieldPath().String(),
+		"[@PATH]", u.JSONFieldName(),
 		"[@TYPE]", u.ruleName,
 	)
 

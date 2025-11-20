@@ -34,6 +34,9 @@ func (m *mindurationValidator) Validate() string {
 func (m *mindurationValidator) FieldName() string {
 	return m.field.Names[0].Name
 }
+func (m *mindurationValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(m.field)
+}
 
 func (m *mindurationValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(m.structName, m.parentPath, m.FieldName())
@@ -57,7 +60,7 @@ func (m *mindurationValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the duration is less than the minimum.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be at least [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be at least [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMindurationValidation", m.structName, m.FieldName())
@@ -66,8 +69,9 @@ func (m *mindurationValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", m.JSONFieldName(),
 		"[@FIELD]", m.FieldName(),
-		"[@PATH]", m.FieldPath().String(),
+		"[@PATH]", m.JSONFieldName(),
 		"[@VALUE]", m.minDuration,
 		"[@TYPE]", m.ruleName,
 	)
@@ -84,7 +88,7 @@ func (m *mindurationValidator) ErrVariable() string {
 }
 
 func (m *mindurationValidator) Imports() []string {
-	return []string{"time"}
+	return []string{}
 }
 
 // ValidateMinduration creates a new mindurationValidator for time.Duration types.

@@ -14,7 +14,7 @@ var (
 	ErrNilFQDN = errors.New("input FQDN is nil")
 
 	// ErrFQDNDomainFQDNValidation is the error returned when the field is not a fully qualified domain name.
-	ErrFQDNDomainFQDNValidation = govaliderrors.ValidationError{Reason: "field Domain must be a fully qualified domain name", Path: "FQDN.Domain", Type: "fqdn"}
+	ErrFQDNDomainFQDNValidation = govaliderrors.ValidationError{Reason: "domain must be a fully qualified domain name", Path: "domain", Type: "fqdn"}
 )
 
 func ValidateFQDN(t *FQDN) error {

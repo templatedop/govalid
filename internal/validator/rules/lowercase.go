@@ -33,6 +33,9 @@ func (l *lowercaseValidator) Validate() string {
 func (l *lowercaseValidator) FieldName() string {
 	return l.field.Names[0].Name
 }
+func (l *lowercaseValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(l.field)
+}
 
 func (l *lowercaseValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(l.structName, l.parentPath, l.FieldName())
@@ -56,7 +59,7 @@ func (l *lowercaseValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not all lowercase.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be lowercase", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be lowercase", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sLowercaseValidation", l.structName, l.FieldName())
@@ -65,8 +68,9 @@ func (l *lowercaseValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", l.JSONFieldName(),
 		"[@FIELD]", l.FieldName(),
-		"[@PATH]", l.FieldPath().String(),
+		"[@PATH]", l.JSONFieldName(),
 		"[@TYPE]", l.ruleName,
 	)
 

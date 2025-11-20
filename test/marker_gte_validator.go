@@ -13,7 +13,7 @@ var (
 	ErrNilGTE = errors.New("input GTE is nil")
 
 	// ErrGTEAgeGTEValidation is the error returned when the value of the field is less than 18.
-	ErrGTEAgeGTEValidation = govaliderrors.ValidationError{Reason: "field Age must be greater than or equal to 18", Path: "GTE.Age", Type: "gte"}
+	ErrGTEAgeGTEValidation = govaliderrors.ValidationError{Reason: "age must be greater than or equal to 18", Path: "age", Type: "gte"}
 )
 
 func ValidateGTE(t *GTE) error {

@@ -14,7 +14,7 @@ var (
 	ErrNilLowercase = errors.New("input Lowercase is nil")
 
 	// ErrLowercaseUsernameLowercaseValidation is the error returned when the field is not all lowercase.
-	ErrLowercaseUsernameLowercaseValidation = govaliderrors.ValidationError{Reason: "field Username must be lowercase", Path: "Lowercase.Username", Type: "lowercase"}
+	ErrLowercaseUsernameLowercaseValidation = govaliderrors.ValidationError{Reason: "username must be lowercase", Path: "username", Type: "lowercase"}
 )
 
 func ValidateLowercase(t *Lowercase) error {

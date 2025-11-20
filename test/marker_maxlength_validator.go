@@ -14,7 +14,7 @@ var (
 	ErrNilMaxLength = errors.New("input MaxLength is nil")
 
 	// ErrMaxLengthNameMaxLengthValidation is the error returned when the length of the field exceeds the maximum of 50.
-	ErrMaxLengthNameMaxLengthValidation = govaliderrors.ValidationError{Reason: "field Name must have a maximum length of 50", Path: "MaxLength.Name", Type: "maxlength"}
+	ErrMaxLengthNameMaxLengthValidation = govaliderrors.ValidationError{Reason: "name must have a maximum length of 50", Path: "name", Type: "maxlength"}
 )
 
 func ValidateMaxLength(t *MaxLength) error {

@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedUnless = errors.New("input ExcludedUnless is nil")
 
 	// ErrExcludedUnlessInactiveFieldExcludedUnlessValidation is the error returned when the field must be absent unless another field has a specific value.
-	ErrExcludedUnlessInactiveFieldExcludedUnlessValidation = govaliderrors.ValidationError{Reason: "field InactiveField must be absent unless Status equals \"active\"", Path: "ExcludedUnless.InactiveField", Type: "excluded_unless"}
+	ErrExcludedUnlessInactiveFieldExcludedUnlessValidation = govaliderrors.ValidationError{Reason: "inactive_field must be absent unless Status equals \"active\"", Path: "inactive_field", Type: "excluded_unless"}
 )
 
 func ValidateExcludedUnless(t *ExcludedUnless) error {

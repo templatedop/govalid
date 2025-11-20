@@ -34,6 +34,9 @@ func (m *maxdurationValidator) Validate() string {
 func (m *maxdurationValidator) FieldName() string {
 	return m.field.Names[0].Name
 }
+func (m *maxdurationValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(m.field)
+}
 
 func (m *maxdurationValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(m.structName, m.parentPath, m.FieldName())
@@ -57,7 +60,7 @@ func (m *maxdurationValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the duration exceeds the maximum.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must not exceed [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must not exceed [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sMaxdurationValidation", m.structName, m.FieldName())
@@ -66,8 +69,9 @@ func (m *maxdurationValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", m.JSONFieldName(),
 		"[@FIELD]", m.FieldName(),
-		"[@PATH]", m.FieldPath().String(),
+		"[@PATH]", m.JSONFieldName(),
 		"[@VALUE]", m.maxDuration,
 		"[@TYPE]", m.ruleName,
 	)
@@ -84,7 +88,7 @@ func (m *maxdurationValidator) ErrVariable() string {
 }
 
 func (m *maxdurationValidator) Imports() []string {
-	return []string{"time"}
+	return []string{}
 }
 
 // ValidateMaxduration creates a new maxdurationValidator for time.Duration types.

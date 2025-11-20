@@ -41,6 +41,9 @@ func (r *required_ifValidator) Validate() string {
 func (r *required_ifValidator) FieldName() string {
 	return r.field.Names[0].Name
 }
+func (r *required_ifValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(r.field)
+}
 
 func (r *required_ifValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(r.structName, r.parentPath, r.FieldName())
@@ -64,7 +67,7 @@ func (r *required_ifValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is required due to another field's value.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required when [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] is required when [@OTHER] equals [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredIfValidation", r.structName, r.FieldName())
@@ -76,8 +79,9 @@ func (r *required_ifValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", r.JSONFieldName(),
 		"[@FIELD]", r.FieldName(),
-		"[@PATH]", r.FieldPath().String(),
+		"[@PATH]", r.JSONFieldName(),
 		"[@OTHER]", r.otherField,
 		"[@VALUE]", escapedValue,
 		"[@TYPE]", r.ruleName,

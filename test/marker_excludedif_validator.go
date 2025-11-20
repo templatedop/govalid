@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedIf = errors.New("input ExcludedIf is nil")
 
 	// ErrExcludedIfInactiveFieldExcludedIfValidation is the error returned when the field must be absent due to another field's value.
-	ErrExcludedIfInactiveFieldExcludedIfValidation = govaliderrors.ValidationError{Reason: "field InactiveField must be absent when Status equals \"inactive\"", Path: "ExcludedIf.InactiveField", Type: "excluded_if"}
+	ErrExcludedIfInactiveFieldExcludedIfValidation = govaliderrors.ValidationError{Reason: "inactive_field must be absent when Status equals \"inactive\"", Path: "inactive_field", Type: "excluded_if"}
 )
 
 func ValidateExcludedIf(t *ExcludedIf) error {

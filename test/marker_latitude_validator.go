@@ -14,7 +14,7 @@ var (
 	ErrNilLatitude = errors.New("input Latitude is nil")
 
 	// ErrLatitudeLatLatitudeValidation is the error returned when the field is not a valid latitude (-90 to 90).
-	ErrLatitudeLatLatitudeValidation = govaliderrors.ValidationError{Reason: "field Lat must be a valid latitude (-90 to 90)", Path: "Latitude.Lat", Type: "latitude"}
+	ErrLatitudeLatLatitudeValidation = govaliderrors.ValidationError{Reason: "lat must be a valid latitude (-90 to 90)", Path: "lat", Type: "latitude"}
 )
 
 func ValidateLatitude(t *Latitude) error {

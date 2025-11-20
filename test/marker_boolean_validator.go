@@ -14,7 +14,7 @@ var (
 	ErrNilBoolean = errors.New("input Boolean is nil")
 
 	// ErrBooleanFlagBooleanValidation is the error returned when the field is not a valid boolean string.
-	ErrBooleanFlagBooleanValidation = govaliderrors.ValidationError{Reason: "field Flag must be a valid boolean (true, false, 1, 0, yes, no, on, off)", Path: "Boolean.Flag", Type: "boolean"}
+	ErrBooleanFlagBooleanValidation = govaliderrors.ValidationError{Reason: "flag must be a valid boolean (true, false, 1, 0, yes, no, on, off)", Path: "flag", Type: "boolean"}
 )
 
 func ValidateBoolean(t *Boolean) error {

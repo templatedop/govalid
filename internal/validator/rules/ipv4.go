@@ -32,6 +32,10 @@ func (v *ipv4Validator) FieldName() string {
 	return v.field.Names[0].Name
 }
 
+func (v *ipv4Validator) JSONFieldName() string {
+	return validator.GetJSONTagName(v.field)
+}
+
 func (v *ipv4Validator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(v.structName, v.parentPath, v.FieldName())
 }
@@ -54,7 +58,7 @@ func (v *ipv4Validator) Err() string {
 
 	const errTemplate = `
 	  // [@ERRVARIABLE] is returned when the [@FIELD] fails ipv4 validation.
-	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] failed ipv4 validation", Path: "[@PATH]", Type: "[@TYPE]"}
+	  [@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] failed ipv4 validation", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sIpv4Validation", v.structName, v.FieldName())
@@ -63,8 +67,9 @@ func (v *ipv4Validator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", v.JSONFieldName(),
 		"[@FIELD]", v.FieldName(),
-		"[@PATH]", v.FieldPath().String(),
+		"[@PATH]", v.JSONFieldName(),
 		"[@TYPE]", v.ruleName,
 	)
 

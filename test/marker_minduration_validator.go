@@ -14,7 +14,7 @@ var (
 	ErrNilMinDuration = errors.New("input MinDuration is nil")
 
 	// ErrMinDurationTimeoutMindurationValidation is the error returned when the duration is less than the minimum.
-	ErrMinDurationTimeoutMindurationValidation = govaliderrors.ValidationError{Reason: "field Timeout must be at least 1h", Path: "MinDuration.Timeout", Type: "minduration"}
+	ErrMinDurationTimeoutMindurationValidation = govaliderrors.ValidationError{Reason: "timeout must be at least 1h", Path: "timeout", Type: "minduration"}
 )
 
 func ValidateMinDuration(t *MinDuration) error {

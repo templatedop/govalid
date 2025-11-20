@@ -33,6 +33,9 @@ func (l *lengthValidator) Validate() string {
 func (l *lengthValidator) FieldName() string {
 	return l.field.Names[0].Name
 }
+func (l *lengthValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(l.field)
+}
 
 func (l *lengthValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(l.structName, l.parentPath, l.FieldName())
@@ -56,7 +59,7 @@ func (l *lengthValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the length of the field is not exactly [@VALUE].
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] length must be exactly [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] length must be exactly [@VALUE]", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sLengthValidation", l.structName, l.FieldName())
@@ -65,8 +68,9 @@ func (l *lengthValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", l.JSONFieldName(),
 		"[@FIELD]", l.FieldName(),
-		"[@PATH]", l.FieldPath().String(),
+		"[@PATH]", l.JSONFieldName(),
 		"[@VALUE]", l.lengthValue,
 		"[@TYPE]", l.ruleName,
 	)
@@ -83,7 +87,7 @@ func (l *lengthValidator) ErrVariable() string {
 }
 
 func (l *lengthValidator) Imports() []string {
-	return []string{"unicode/utf8"}
+	return []string{}
 }
 
 // ValidateLength creates a new lengthValidator if the field type is string and the length marker is present.

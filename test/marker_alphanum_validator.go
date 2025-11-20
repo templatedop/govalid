@@ -14,7 +14,7 @@ var (
 	ErrNilAlphanum = errors.New("input Alphanum is nil")
 
 	// ErrAlphanumCodeAlphanumValidation is the error returned when the field contains non-alphanumeric characters.
-	ErrAlphanumCodeAlphanumValidation = govaliderrors.ValidationError{Reason: "field Code must contain only alphanumeric characters", Path: "Alphanum.Code", Type: "alphanum"}
+	ErrAlphanumCodeAlphanumValidation = govaliderrors.ValidationError{Reason: "code must contain only alphanumeric characters", Path: "code", Type: "alphanum"}
 )
 
 func ValidateAlphanum(t *Alphanum) error {

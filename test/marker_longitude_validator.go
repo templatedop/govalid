@@ -14,7 +14,7 @@ var (
 	ErrNilLongitude = errors.New("input Longitude is nil")
 
 	// ErrLongitudeLonLongitudeValidation is the error returned when the field is not a valid longitude (-180 to 180).
-	ErrLongitudeLonLongitudeValidation = govaliderrors.ValidationError{Reason: "field Lon must be a valid longitude (-180 to 180)", Path: "Longitude.Lon", Type: "longitude"}
+	ErrLongitudeLonLongitudeValidation = govaliderrors.ValidationError{Reason: "lon must be a valid longitude (-180 to 180)", Path: "lon", Type: "longitude"}
 )
 
 func ValidateLongitude(t *Longitude) error {

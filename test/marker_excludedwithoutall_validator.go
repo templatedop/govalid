@@ -13,7 +13,7 @@ var (
 	ErrNilExcludedWithoutAll = errors.New("input ExcludedWithoutAll is nil")
 
 	// ErrExcludedWithoutAllConflictingFeatureExcludedWithoutAllValidation is the error returned when the field must be absent because all other fields are absent.
-	ErrExcludedWithoutAllConflictingFeatureExcludedWithoutAllValidation = govaliderrors.ValidationError{Reason: "field ConflictingFeature must be absent when all of FeatureA, FeatureB are absent", Path: "ExcludedWithoutAll.ConflictingFeature", Type: "excluded_without_all"}
+	ErrExcludedWithoutAllConflictingFeatureExcludedWithoutAllValidation = govaliderrors.ValidationError{Reason: "conflicting_feature must be absent when all of FeatureA, FeatureB are absent", Path: "conflicting_feature", Type: "excluded_without_all"}
 )
 
 func ValidateExcludedWithoutAll(t *ExcludedWithoutAll) error {

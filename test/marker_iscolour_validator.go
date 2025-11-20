@@ -14,7 +14,7 @@ var (
 	ErrNilIsColour = errors.New("input IsColour is nil")
 
 	// ErrIsColourColorIscolourValidation is the error returned when the field is not a valid color format.
-	ErrIsColourColorIscolourValidation = govaliderrors.ValidationError{Reason: "field Color must be a valid color format", Path: "IsColour.Color", Type: "iscolour"}
+	ErrIsColourColorIscolourValidation = govaliderrors.ValidationError{Reason: "color must be a valid color format", Path: "color", Type: "iscolour"}
 )
 
 func ValidateIsColour(t *IsColour) error {

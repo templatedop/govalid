@@ -53,6 +53,10 @@ func (r *requiredValidator) FieldName() string {
 	return r.field.Names[0].Name
 }
 
+func (r *requiredValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(r.field)
+}
+
 func (r *requiredValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(r.structName, r.parentPath, r.FieldName())
 }
@@ -74,8 +78,8 @@ func (r *requiredValidator) Err() string {
 	`
 
 	const errTemplate = `
-		// [@ERRVARIABLE] is returned when the [@FIELD] is required but not provided.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] is required", Path: "[@PATH]", Type: "[@TYPE]"}
+		// [@ERRVARIABLE] is returned when the [@JSONFIELD] is required but not provided.
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] is a required field", Path: "[@JSONFIELD]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sRequiredValidation", r.structName, r.FieldName())
@@ -84,8 +88,8 @@ func (r *requiredValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
-		"[@FIELD]", r.FieldName(),
-		"[@PATH]", r.FieldPath().String(),
+		"[@JSONFIELD]", r.JSONFieldName(),
+		"[@PATH]", r.JSONFieldName(),
 		"[@TYPE]", r.ruleName,
 	)
 

@@ -13,7 +13,7 @@ var (
 	ErrNilRequiredWithout = errors.New("input RequiredWithout is nil")
 
 	// ErrRequiredWithoutEmailRequiredWithoutValidation is the error returned when the field is required because other fields are absent.
-	ErrRequiredWithoutEmailRequiredWithoutValidation = govaliderrors.ValidationError{Reason: "field Email is required when any of Phone are absent", Path: "RequiredWithout.Email", Type: "required_without"}
+	ErrRequiredWithoutEmailRequiredWithoutValidation = govaliderrors.ValidationError{Reason: "email is required when any of Phone are absent", Path: "email", Type: "required_without"}
 )
 
 func ValidateRequiredWithout(t *RequiredWithout) error {

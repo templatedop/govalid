@@ -33,6 +33,9 @@ func (n *numberValidator) Validate() string {
 func (n *numberValidator) FieldName() string {
 	return n.field.Names[0].Name
 }
+func (n *numberValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(n.field)
+}
 
 func (n *numberValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(n.structName, n.parentPath, n.FieldName())
@@ -56,7 +59,7 @@ func (n *numberValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains non-numeric characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain only numbers", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must contain only numbers", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sNumberValidation", n.structName, n.FieldName())
@@ -65,8 +68,9 @@ func (n *numberValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", n.JSONFieldName(),
 		"[@FIELD]", n.FieldName(),
-		"[@PATH]", n.FieldPath().String(),
+		"[@PATH]", n.JSONFieldName(),
 		"[@TYPE]", n.ruleName,
 	)
 

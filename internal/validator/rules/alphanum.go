@@ -33,6 +33,9 @@ func (a *alphanumValidator) Validate() string {
 func (a *alphanumValidator) FieldName() string {
 	return a.field.Names[0].Name
 }
+func (a *alphanumValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(a.field)
+}
 
 func (a *alphanumValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(a.structName, a.parentPath, a.FieldName())
@@ -56,7 +59,7 @@ func (a *alphanumValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field contains non-alphanumeric characters.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must contain only alphanumeric characters", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must contain only alphanumeric characters", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sAlphanumValidation", a.structName, a.FieldName())
@@ -65,8 +68,9 @@ func (a *alphanumValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", a.JSONFieldName(),
 		"[@FIELD]", a.FieldName(),
-		"[@PATH]", a.FieldPath().String(),
+		"[@PATH]", a.JSONFieldName(),
 		"[@TYPE]", a.ruleName,
 	)
 

@@ -35,6 +35,10 @@ func (e *emailValidator) FieldName() string {
 	return e.field.Names[0].Name
 }
 
+func (e *emailValidator) JSONFieldName() string {
+	return validator.GetJSONTagName(e.field)
+}
+
 func (e *emailValidator) FieldPath() validator.FieldPath {
 	return validator.NewFieldPath(e.structName, e.parentPath, e.FieldName())
 }
@@ -57,7 +61,7 @@ func (e *emailValidator) Err() string {
 
 	const errTemplate = `
 		// [@ERRVARIABLE] is the error returned when the field is not a valid email address.
-		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "field [@FIELD] must be a valid email address", Path: "[@PATH]", Type: "[@TYPE]"}
+		[@ERRVARIABLE] = govaliderrors.ValidationError{Reason: "[@JSONFIELD] must be a valid email address", Path: "[@PATH]", Type: "[@TYPE]"}
 	`
 
 	legacyErrVarName := fmt.Sprintf("Err%s%sEmailValidation", e.structName, e.FieldName())
@@ -66,8 +70,9 @@ func (e *emailValidator) Err() string {
 	replacer := strings.NewReplacer(
 		"[@ERRVARIABLE]", currentErrVarName,
 		"[@LEGACYERRVAR]", legacyErrVarName,
+		"[@JSONFIELD]", e.JSONFieldName(),
 		"[@FIELD]", e.FieldName(),
-		"[@PATH]", e.FieldPath().String(),
+		"[@PATH]", e.JSONFieldName(),
 		"[@TYPE]", e.ruleName,
 	)
 

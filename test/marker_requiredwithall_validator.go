@@ -13,7 +13,7 @@ var (
 	ErrNilRequiredWithAll = errors.New("input RequiredWithAll is nil")
 
 	// ErrRequiredWithAllFullNameRequiredWithAllValidation is the error returned when the field is required because all other fields are present.
-	ErrRequiredWithAllFullNameRequiredWithAllValidation = govaliderrors.ValidationError{Reason: "field FullName is required when all of FirstName, LastName are present", Path: "RequiredWithAll.FullName", Type: "required_with_all"}
+	ErrRequiredWithAllFullNameRequiredWithAllValidation = govaliderrors.ValidationError{Reason: "full_name is required when all of FirstName, LastName are present", Path: "full_name", Type: "required_with_all"}
 )
 
 func ValidateRequiredWithAll(t *RequiredWithAll) error {
